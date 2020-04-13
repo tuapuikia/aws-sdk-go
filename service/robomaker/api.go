@@ -4402,10 +4402,77 @@ func (s CancelSimulationJobOutput) GoString() string {
 	return s.String()
 }
 
+// Compute information for the simulation job.
+type Compute struct {
+	_ struct{} `type:"structure"`
+
+	// The simulation unit limit. Your simulation is allocated CPU and memory proportional
+	// to the supplied simulation unit limit. A simulation unit is 1 vcpu and 2GB
+	// of memory. You are only billed for the SU utilization you consume up to the
+	// maximim value provided.
+	SimulationUnitLimit *int64 `locationName:"simulationUnitLimit" min:"1" type:"integer"`
+}
+
+// String returns the string representation
+func (s Compute) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s Compute) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Compute) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Compute"}
+	if s.SimulationUnitLimit != nil && *s.SimulationUnitLimit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("SimulationUnitLimit", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetSimulationUnitLimit sets the SimulationUnitLimit field's value.
+func (s *Compute) SetSimulationUnitLimit(v int64) *Compute {
+	s.SimulationUnitLimit = &v
+	return s
+}
+
+// Compute information for the simulation job
+type ComputeResponse struct {
+	_ struct{} `type:"structure"`
+
+	// The simulation unit limit. Your simulation is allocated CPU and memory proportional
+	// to the supplied simulation unit limit. A simulation unit is 1 vcpu and 2GB
+	// of memory. You are only billed for the SU utilization you consume up to the
+	// maximim value provided.
+	SimulationUnitLimit *int64 `locationName:"simulationUnitLimit" min:"1" type:"integer"`
+}
+
+// String returns the string representation
+func (s ComputeResponse) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s ComputeResponse) GoString() string {
+	return s.String()
+}
+
+// SetSimulationUnitLimit sets the SimulationUnitLimit field's value.
+func (s *ComputeResponse) SetSimulationUnitLimit(v int64) *ComputeResponse {
+	s.SimulationUnitLimit = &v
+	return s
+}
+
 // The failure percentage threshold percentage was met.
 type ConcurrentDeploymentException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -4422,17 +4489,17 @@ func (s ConcurrentDeploymentException) GoString() string {
 
 func newErrorConcurrentDeploymentException(v protocol.ResponseMetadata) error {
 	return &ConcurrentDeploymentException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ConcurrentDeploymentException) Code() string {
+func (s *ConcurrentDeploymentException) Code() string {
 	return "ConcurrentDeploymentException"
 }
 
 // Message returns the exception's message.
-func (s ConcurrentDeploymentException) Message() string {
+func (s *ConcurrentDeploymentException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -4440,22 +4507,22 @@ func (s ConcurrentDeploymentException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ConcurrentDeploymentException) OrigErr() error {
+func (s *ConcurrentDeploymentException) OrigErr() error {
 	return nil
 }
 
-func (s ConcurrentDeploymentException) Error() string {
+func (s *ConcurrentDeploymentException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ConcurrentDeploymentException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ConcurrentDeploymentException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ConcurrentDeploymentException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ConcurrentDeploymentException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type CreateDeploymentJobInput struct {
@@ -5332,6 +5399,11 @@ func (s *CreateSimulationApplicationInput) Validate() error {
 	if s.Sources == nil {
 		invalidParams.Add(request.NewErrParamRequired("Sources"))
 	}
+	if s.RenderingEngine != nil {
+		if err := s.RenderingEngine.Validate(); err != nil {
+			invalidParams.AddNested("RenderingEngine", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.Sources != nil {
 		for i, v := range s.Sources {
 			if v == nil {
@@ -5647,6 +5719,9 @@ type CreateSimulationJobInput struct {
 	// of the request.
 	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string" idempotencyToken:"true"`
 
+	// Compute information for the simulation job.
+	Compute *Compute `locationName:"compute" type:"structure"`
+
 	// Specify data sources to mount read-only files from S3 into your simulation.
 	// These files are available under /opt/robomaker/datasources/data_source_name.
 	//
@@ -5736,6 +5811,11 @@ func (s *CreateSimulationJobInput) Validate() error {
 	if s.SimulationApplications != nil && len(s.SimulationApplications) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("SimulationApplications", 1))
 	}
+	if s.Compute != nil {
+		if err := s.Compute.Validate(); err != nil {
+			invalidParams.AddNested("Compute", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.DataSources != nil {
 		for i, v := range s.DataSources {
 			if v == nil {
@@ -5791,6 +5871,12 @@ func (s *CreateSimulationJobInput) Validate() error {
 // SetClientRequestToken sets the ClientRequestToken field's value.
 func (s *CreateSimulationJobInput) SetClientRequestToken(v string) *CreateSimulationJobInput {
 	s.ClientRequestToken = &v
+	return s
+}
+
+// SetCompute sets the Compute field's value.
+func (s *CreateSimulationJobInput) SetCompute(v *Compute) *CreateSimulationJobInput {
+	s.Compute = v
 	return s
 }
 
@@ -5863,6 +5949,9 @@ type CreateSimulationJobOutput struct {
 	// Unique, case-sensitive identifier that you provide to ensure the idempotency
 	// of the request.
 	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string"`
+
+	// Compute information for the simulation job.
+	Compute *ComputeResponse `locationName:"compute" type:"structure"`
 
 	// The data sources for the simulation job.
 	DataSources []*DataSource `locationName:"dataSources" type:"list"`
@@ -5990,6 +6079,12 @@ func (s *CreateSimulationJobOutput) SetArn(v string) *CreateSimulationJobOutput 
 // SetClientRequestToken sets the ClientRequestToken field's value.
 func (s *CreateSimulationJobOutput) SetClientRequestToken(v string) *CreateSimulationJobOutput {
 	s.ClientRequestToken = &v
+	return s
+}
+
+// SetCompute sets the Compute field's value.
+func (s *CreateSimulationJobOutput) SetCompute(v *ComputeResponse) *CreateSimulationJobOutput {
+	s.Compute = v
 	return s
 }
 
@@ -7851,6 +7946,9 @@ type DescribeSimulationJobOutput struct {
 	// of the request.
 	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string"`
 
+	// Compute information for the simulation job.
+	Compute *ComputeResponse `locationName:"compute" type:"structure"`
+
 	// The data sources for the simulation job.
 	DataSources []*DataSource `locationName:"dataSources" type:"list"`
 
@@ -7988,6 +8086,12 @@ func (s *DescribeSimulationJobOutput) SetArn(v string) *DescribeSimulationJobOut
 // SetClientRequestToken sets the ClientRequestToken field's value.
 func (s *DescribeSimulationJobOutput) SetClientRequestToken(v string) *DescribeSimulationJobOutput {
 	s.ClientRequestToken = &v
+	return s
+}
+
+// SetCompute sets the Compute field's value.
+func (s *DescribeSimulationJobOutput) SetCompute(v *ComputeResponse) *DescribeSimulationJobOutput {
+	s.Compute = v
 	return s
 }
 
@@ -8273,8 +8377,8 @@ func (s *Fleet) SetName(v string) *Fleet {
 // Do not reuse a client token with different requests, unless the requests
 // are identical.
 type IdempotentParameterMismatchException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -8291,17 +8395,17 @@ func (s IdempotentParameterMismatchException) GoString() string {
 
 func newErrorIdempotentParameterMismatchException(v protocol.ResponseMetadata) error {
 	return &IdempotentParameterMismatchException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s IdempotentParameterMismatchException) Code() string {
+func (s *IdempotentParameterMismatchException) Code() string {
 	return "IdempotentParameterMismatchException"
 }
 
 // Message returns the exception's message.
-func (s IdempotentParameterMismatchException) Message() string {
+func (s *IdempotentParameterMismatchException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -8309,28 +8413,28 @@ func (s IdempotentParameterMismatchException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s IdempotentParameterMismatchException) OrigErr() error {
+func (s *IdempotentParameterMismatchException) OrigErr() error {
 	return nil
 }
 
-func (s IdempotentParameterMismatchException) Error() string {
+func (s *IdempotentParameterMismatchException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s IdempotentParameterMismatchException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *IdempotentParameterMismatchException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s IdempotentParameterMismatchException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *IdempotentParameterMismatchException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // AWS RoboMaker experienced a service issue. Try your call again.
 type InternalServerException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -8347,17 +8451,17 @@ func (s InternalServerException) GoString() string {
 
 func newErrorInternalServerException(v protocol.ResponseMetadata) error {
 	return &InternalServerException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s InternalServerException) Code() string {
+func (s *InternalServerException) Code() string {
 	return "InternalServerException"
 }
 
 // Message returns the exception's message.
-func (s InternalServerException) Message() string {
+func (s *InternalServerException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -8365,29 +8469,29 @@ func (s InternalServerException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s InternalServerException) OrigErr() error {
+func (s *InternalServerException) OrigErr() error {
 	return nil
 }
 
-func (s InternalServerException) Error() string {
+func (s *InternalServerException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s InternalServerException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *InternalServerException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s InternalServerException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *InternalServerException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // A parameter specified in a request is not valid, is unsupported, or cannot
 // be used. The returned message provides an explanation of the error value.
 type InvalidParameterException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -8404,17 +8508,17 @@ func (s InvalidParameterException) GoString() string {
 
 func newErrorInvalidParameterException(v protocol.ResponseMetadata) error {
 	return &InvalidParameterException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s InvalidParameterException) Code() string {
+func (s *InvalidParameterException) Code() string {
 	return "InvalidParameterException"
 }
 
 // Message returns the exception's message.
-func (s InvalidParameterException) Message() string {
+func (s *InvalidParameterException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -8422,22 +8526,22 @@ func (s InvalidParameterException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s InvalidParameterException) OrigErr() error {
+func (s *InvalidParameterException) OrigErr() error {
 	return nil
 }
 
-func (s InvalidParameterException) Error() string {
+func (s *InvalidParameterException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s InvalidParameterException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *InvalidParameterException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s InvalidParameterException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *InvalidParameterException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // Information about a launch configuration.
@@ -8459,6 +8563,12 @@ type LaunchConfig struct {
 
 	// The port forwarding configuration.
 	PortForwardingConfig *PortForwardingConfig `locationName:"portForwardingConfig" type:"structure"`
+
+	// Boolean indicating whether a streaming session will be configured for the
+	// application. If True, AWS RoboMaker will configure a connection so you can
+	// interact with your application as it is running in the simulation. You must
+	// configure and luanch the component. It must have a graphical user interface.
+	StreamUI *bool `locationName:"streamUI" type:"boolean"`
 }
 
 // String returns the string representation
@@ -8522,11 +8632,17 @@ func (s *LaunchConfig) SetPortForwardingConfig(v *PortForwardingConfig) *LaunchC
 	return s
 }
 
+// SetStreamUI sets the StreamUI field's value.
+func (s *LaunchConfig) SetStreamUI(v bool) *LaunchConfig {
+	s.StreamUI = &v
+	return s
+}
+
 // The requested resource exceeds the maximum number allowed, or the number
 // of concurrent stream requests exceeds the maximum number allowed.
 type LimitExceededException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -8543,17 +8659,17 @@ func (s LimitExceededException) GoString() string {
 
 func newErrorLimitExceededException(v protocol.ResponseMetadata) error {
 	return &LimitExceededException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s LimitExceededException) Code() string {
+func (s *LimitExceededException) Code() string {
 	return "LimitExceededException"
 }
 
 // Message returns the exception's message.
-func (s LimitExceededException) Message() string {
+func (s *LimitExceededException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -8561,22 +8677,22 @@ func (s LimitExceededException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s LimitExceededException) OrigErr() error {
+func (s *LimitExceededException) OrigErr() error {
 	return nil
 }
 
-func (s LimitExceededException) Error() string {
+func (s *LimitExceededException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s LimitExceededException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *LimitExceededException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s LimitExceededException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *LimitExceededException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type ListDeploymentJobsInput struct {
@@ -8834,7 +8950,7 @@ type ListRobotApplicationsInput struct {
 	NextToken *string `locationName:"nextToken" min:"1" type:"string"`
 
 	// The version qualifier of the robot application.
-	VersionQualifier *string `locationName:"versionQualifier" type:"string"`
+	VersionQualifier *string `locationName:"versionQualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -8855,6 +8971,9 @@ func (s *ListRobotApplicationsInput) Validate() error {
 	}
 	if s.NextToken != nil && len(*s.NextToken) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.VersionQualifier != nil && len(*s.VersionQualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("VersionQualifier", 1))
 	}
 	if s.Filters != nil {
 		for i, v := range s.Filters {
@@ -9071,7 +9190,7 @@ type ListSimulationApplicationsInput struct {
 	NextToken *string `locationName:"nextToken" min:"1" type:"string"`
 
 	// The version qualifier of the simulation application.
-	VersionQualifier *string `locationName:"versionQualifier" type:"string"`
+	VersionQualifier *string `locationName:"versionQualifier" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -9092,6 +9211,9 @@ func (s *ListSimulationApplicationsInput) Validate() error {
 	}
 	if s.NextToken != nil && len(*s.NextToken) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.VersionQualifier != nil && len(*s.VersionQualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("VersionQualifier", 1))
 	}
 	if s.Filters != nil {
 		for i, v := range s.Filters {
@@ -9882,7 +10004,7 @@ type RenderingEngine struct {
 	Name *string `locationName:"name" type:"string" enum:"RenderingEngineType"`
 
 	// The version of the rendering engine.
-	Version *string `locationName:"version" type:"string"`
+	Version *string `locationName:"version" min:"1" type:"string"`
 }
 
 // String returns the string representation
@@ -9893,6 +10015,19 @@ func (s RenderingEngine) String() string {
 // GoString returns the string representation
 func (s RenderingEngine) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RenderingEngine) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RenderingEngine"}
+	if s.Version != nil && len(*s.Version) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Version", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetName sets the Name field's value.
@@ -9909,8 +10044,8 @@ func (s *RenderingEngine) SetVersion(v string) *RenderingEngine {
 
 // The specified resource already exists.
 type ResourceAlreadyExistsException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -9927,17 +10062,17 @@ func (s ResourceAlreadyExistsException) GoString() string {
 
 func newErrorResourceAlreadyExistsException(v protocol.ResponseMetadata) error {
 	return &ResourceAlreadyExistsException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ResourceAlreadyExistsException) Code() string {
+func (s *ResourceAlreadyExistsException) Code() string {
 	return "ResourceAlreadyExistsException"
 }
 
 // Message returns the exception's message.
-func (s ResourceAlreadyExistsException) Message() string {
+func (s *ResourceAlreadyExistsException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -9945,28 +10080,28 @@ func (s ResourceAlreadyExistsException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ResourceAlreadyExistsException) OrigErr() error {
+func (s *ResourceAlreadyExistsException) OrigErr() error {
 	return nil
 }
 
-func (s ResourceAlreadyExistsException) Error() string {
+func (s *ResourceAlreadyExistsException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ResourceAlreadyExistsException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ResourceAlreadyExistsException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ResourceAlreadyExistsException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ResourceAlreadyExistsException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // The specified resource does not exist.
 type ResourceNotFoundException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -9983,17 +10118,17 @@ func (s ResourceNotFoundException) GoString() string {
 
 func newErrorResourceNotFoundException(v protocol.ResponseMetadata) error {
 	return &ResourceNotFoundException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ResourceNotFoundException) Code() string {
+func (s *ResourceNotFoundException) Code() string {
 	return "ResourceNotFoundException"
 }
 
 // Message returns the exception's message.
-func (s ResourceNotFoundException) Message() string {
+func (s *ResourceNotFoundException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -10001,22 +10136,22 @@ func (s ResourceNotFoundException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ResourceNotFoundException) OrigErr() error {
+func (s *ResourceNotFoundException) OrigErr() error {
 	return nil
 }
 
-func (s ResourceNotFoundException) Error() string {
+func (s *ResourceNotFoundException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ResourceNotFoundException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ResourceNotFoundException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ResourceNotFoundException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ResourceNotFoundException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type RestartSimulationJobInput struct {
@@ -10518,8 +10653,8 @@ func (s *S3Object) SetKey(v string) *S3Object {
 
 // The request has failed due to a temporary failure of the server.
 type ServiceUnavailableException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -10536,17 +10671,17 @@ func (s ServiceUnavailableException) GoString() string {
 
 func newErrorServiceUnavailableException(v protocol.ResponseMetadata) error {
 	return &ServiceUnavailableException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ServiceUnavailableException) Code() string {
+func (s *ServiceUnavailableException) Code() string {
 	return "ServiceUnavailableException"
 }
 
 // Message returns the exception's message.
-func (s ServiceUnavailableException) Message() string {
+func (s *ServiceUnavailableException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -10554,22 +10689,22 @@ func (s ServiceUnavailableException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ServiceUnavailableException) OrigErr() error {
+func (s *ServiceUnavailableException) OrigErr() error {
 	return nil
 }
 
-func (s ServiceUnavailableException) Error() string {
+func (s *ServiceUnavailableException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ServiceUnavailableException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ServiceUnavailableException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ServiceUnavailableException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ServiceUnavailableException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // Information about a simulation application configuration.
@@ -10725,6 +10860,9 @@ type SimulationJob struct {
 	// A unique identifier for this SimulationJob request.
 	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string"`
 
+	// Compute information for the simulation job
+	Compute *ComputeResponse `locationName:"compute" type:"structure"`
+
 	// The data sources for the simulation job.
 	DataSources []*DataSource `locationName:"dataSources" type:"list"`
 
@@ -10813,6 +10951,12 @@ func (s *SimulationJob) SetArn(v string) *SimulationJob {
 // SetClientRequestToken sets the ClientRequestToken field's value.
 func (s *SimulationJob) SetClientRequestToken(v string) *SimulationJob {
 	s.ClientRequestToken = &v
+	return s
+}
+
+// SetCompute sets the Compute field's value.
+func (s *SimulationJob) SetCompute(v *ComputeResponse) *SimulationJob {
+	s.Compute = v
 	return s
 }
 
@@ -11054,6 +11198,9 @@ func (s *SimulationJobBatchSummary) SetStatus(v string) *SimulationJobBatchSumma
 type SimulationJobRequest struct {
 	_ struct{} `type:"structure"`
 
+	// Compute information for the simulation job
+	Compute *Compute `locationName:"compute" type:"structure"`
+
 	// Specify data sources to mount read-only files from S3 into your simulation.
 	// These files are available under /opt/robomaker/datasources/data_source_name.
 	//
@@ -11137,6 +11284,11 @@ func (s *SimulationJobRequest) Validate() error {
 	if s.SimulationApplications != nil && len(s.SimulationApplications) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("SimulationApplications", 1))
 	}
+	if s.Compute != nil {
+		if err := s.Compute.Validate(); err != nil {
+			invalidParams.AddNested("Compute", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.DataSources != nil {
 		for i, v := range s.DataSources {
 			if v == nil {
@@ -11187,6 +11339,12 @@ func (s *SimulationJobRequest) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetCompute sets the Compute field's value.
+func (s *SimulationJobRequest) SetCompute(v *Compute) *SimulationJobRequest {
+	s.Compute = v
+	return s
 }
 
 // SetDataSources sets the DataSources field's value.
@@ -11484,7 +11642,7 @@ type StartSimulationJobBatchInput struct {
 
 	// Unique, case-sensitive identifier that you provide to ensure the idempotency
 	// of the request.
-	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string"`
+	ClientRequestToken *string `locationName:"clientRequestToken" min:"1" type:"string" idempotencyToken:"true"`
 
 	// A list of simulation job requests to create in the batch.
 	//
@@ -11993,8 +12151,8 @@ func (s TagResourceOutput) GoString() string {
 // AWS RoboMaker is temporarily unable to process the request. Try your call
 // again.
 type ThrottlingException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -12011,17 +12169,17 @@ func (s ThrottlingException) GoString() string {
 
 func newErrorThrottlingException(v protocol.ResponseMetadata) error {
 	return &ThrottlingException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ThrottlingException) Code() string {
+func (s *ThrottlingException) Code() string {
 	return "ThrottlingException"
 }
 
 // Message returns the exception's message.
-func (s ThrottlingException) Message() string {
+func (s *ThrottlingException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -12029,22 +12187,22 @@ func (s ThrottlingException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ThrottlingException) OrigErr() error {
+func (s *ThrottlingException) OrigErr() error {
 	return nil
 }
 
-func (s ThrottlingException) Error() string {
+func (s *ThrottlingException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ThrottlingException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ThrottlingException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ThrottlingException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ThrottlingException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type UntagResourceInput struct {
@@ -12348,6 +12506,11 @@ func (s *UpdateSimulationApplicationInput) Validate() error {
 	if s.Sources == nil {
 		invalidParams.Add(request.NewErrParamRequired("Sources"))
 	}
+	if s.RenderingEngine != nil {
+		if err := s.RenderingEngine.Validate(); err != nil {
+			invalidParams.AddNested("RenderingEngine", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.Sources != nil {
 		for i, v := range s.Sources {
 			if v == nil {
@@ -12650,6 +12813,9 @@ const (
 	// DeploymentJobErrorCodeGreengrassDeploymentFailed is a DeploymentJobErrorCode enum value
 	DeploymentJobErrorCodeGreengrassDeploymentFailed = "GreengrassDeploymentFailed"
 
+	// DeploymentJobErrorCodeInvalidGreengrassGroup is a DeploymentJobErrorCode enum value
+	DeploymentJobErrorCodeInvalidGreengrassGroup = "InvalidGreengrassGroup"
+
 	// DeploymentJobErrorCodeMissingRobotArchitecture is a DeploymentJobErrorCode enum value
 	DeploymentJobErrorCodeMissingRobotArchitecture = "MissingRobotArchitecture"
 
@@ -12661,6 +12827,9 @@ const (
 
 	// DeploymentJobErrorCodeGreengrassGroupVersionDoesNotExist is a DeploymentJobErrorCode enum value
 	DeploymentJobErrorCodeGreengrassGroupVersionDoesNotExist = "GreengrassGroupVersionDoesNotExist"
+
+	// DeploymentJobErrorCodeLambdaDeleted is a DeploymentJobErrorCode enum value
+	DeploymentJobErrorCodeLambdaDeleted = "LambdaDeleted"
 
 	// DeploymentJobErrorCodeExtractingBundleFailure is a DeploymentJobErrorCode enum value
 	DeploymentJobErrorCodeExtractingBundleFailure = "ExtractingBundleFailure"

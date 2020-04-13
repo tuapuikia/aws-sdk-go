@@ -57,8 +57,6 @@ func (c *CodeGuruProfiler) ConfigureAgentRequest(input *ConfigureAgentInput) (re
 
 // ConfigureAgent API operation for Amazon CodeGuru Profiler.
 //
-// Provides the configuration to use for an agent of the profiling group.
-//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -68,16 +66,16 @@ func (c *CodeGuruProfiler) ConfigureAgentRequest(input *ConfigureAgentInput) (re
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/ConfigureAgent
 func (c *CodeGuruProfiler) ConfigureAgent(input *ConfigureAgentInput) (*ConfigureAgentOutput, error) {
@@ -145,7 +143,7 @@ func (c *CodeGuruProfiler) CreateProfilingGroupRequest(input *CreateProfilingGro
 
 // CreateProfilingGroup API operation for Amazon CodeGuru Profiler.
 //
-// Create a profiling group.
+// Creates a profiling group.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -156,19 +154,23 @@ func (c *CodeGuruProfiler) CreateProfilingGroupRequest(input *CreateProfilingGro
 //
 // Returned Error Types:
 //   * ServiceQuotaExceededException
-//   Request would cause a service quota to be exceeded.
+//   You have exceeded your service quota. To perform the requested action, remove
+//   some of the relevant resources, or use Service Quotas (https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html)
+//   to request a service quota increase.
 //
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ConflictException
-//   Request can can cause an inconsistent state for the resource.
+//   The requested operation would cause a conflict with the current state of
+//   a service resource associated with the request. Resolve the conflict before
+//   retrying this request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/CreateProfilingGroup
 func (c *CodeGuruProfiler) CreateProfilingGroup(input *CreateProfilingGroupInput) (*CreateProfilingGroupOutput, error) {
@@ -237,7 +239,7 @@ func (c *CodeGuruProfiler) DeleteProfilingGroupRequest(input *DeleteProfilingGro
 
 // DeleteProfilingGroup API operation for Amazon CodeGuru Profiler.
 //
-// Delete a profiling group.
+// Deletes a profiling group.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -248,16 +250,16 @@ func (c *CodeGuruProfiler) DeleteProfilingGroupRequest(input *DeleteProfilingGro
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/DeleteProfilingGroup
 func (c *CodeGuruProfiler) DeleteProfilingGroup(input *DeleteProfilingGroupInput) (*DeleteProfilingGroupOutput, error) {
@@ -325,7 +327,7 @@ func (c *CodeGuruProfiler) DescribeProfilingGroupRequest(input *DescribeProfilin
 
 // DescribeProfilingGroup API operation for Amazon CodeGuru Profiler.
 //
-// Describe a profiling group.
+// Describes a profiling group.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -336,16 +338,16 @@ func (c *CodeGuruProfiler) DescribeProfilingGroupRequest(input *DescribeProfilin
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/DescribeProfilingGroup
 func (c *CodeGuruProfiler) DescribeProfilingGroup(input *DescribeProfilingGroupInput) (*DescribeProfilingGroupOutput, error) {
@@ -364,6 +366,91 @@ func (c *CodeGuruProfiler) DescribeProfilingGroup(input *DescribeProfilingGroupI
 // for more information on using Contexts.
 func (c *CodeGuruProfiler) DescribeProfilingGroupWithContext(ctx aws.Context, input *DescribeProfilingGroupInput, opts ...request.Option) (*DescribeProfilingGroupOutput, error) {
 	req, out := c.DescribeProfilingGroupRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetPolicy = "GetPolicy"
+
+// GetPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetPolicy for more information on using the GetPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetPolicyRequest method.
+//    req, resp := client.GetPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/GetPolicy
+func (c *CodeGuruProfiler) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, output *GetPolicyOutput) {
+	op := &request.Operation{
+		Name:       opGetPolicy,
+		HTTPMethod: "GET",
+		HTTPPath:   "/profilingGroups/{profilingGroupName}/policy",
+	}
+
+	if input == nil {
+		input = &GetPolicyInput{}
+	}
+
+	output = &GetPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetPolicy API operation for Amazon CodeGuru Profiler.
+//
+// Gets the profiling group policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Profiler's
+// API operation GetPolicy for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/GetPolicy
+func (c *CodeGuruProfiler) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
+	req, out := c.GetPolicyRequest(input)
+	return out, req.Send()
+}
+
+// GetPolicyWithContext is the same as GetPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruProfiler) GetPolicyWithContext(ctx aws.Context, input *GetPolicyInput, opts ...request.Option) (*GetPolicyOutput, error) {
+	req, out := c.GetPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -413,14 +500,18 @@ func (c *CodeGuruProfiler) GetProfileRequest(input *GetProfileInput) (req *reque
 
 // GetProfile API operation for Amazon CodeGuru Profiler.
 //
-// Get the aggregated profile of a profiling group for the specified time range.
+// Gets the aggregated profile of a profiling group for the specified time range.
 // If the requested time range does not align with the available aggregated
-// profiles, it will be expanded to attain alignment. If aggregated profiles
-// are available only for part of the period requested, the profile is returned
+// profiles, it is expanded to attain alignment. If aggregated profiles are
+// available only for part of the period requested, the profile is returned
 // from the earliest available to the latest within the requested time range.
-// For instance, if the requested time range is from 00:00 to 00:20 and the
-// available profiles are from 00:15 to 00:25, then the returned profile will
-// be from 00:15 to 00:20.
+//
+// For example, if the requested time range is from 00:00 to 00:20 and the available
+// profiles are from 00:15 to 00:25, the returned profile will be from 00:15
+// to 00:20.
+//
+// You must specify exactly two of the following parameters: startTime, period,
+// and endTime.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -431,16 +522,16 @@ func (c *CodeGuruProfiler) GetProfileRequest(input *GetProfileInput) (req *reque
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/GetProfile
 func (c *CodeGuruProfiler) GetProfile(input *GetProfileInput) (*GetProfileOutput, error) {
@@ -526,16 +617,16 @@ func (c *CodeGuruProfiler) ListProfileTimesRequest(input *ListProfileTimesInput)
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/ListProfileTimes
 func (c *CodeGuruProfiler) ListProfileTimes(input *ListProfileTimesInput) (*ListProfileTimesOutput, error) {
@@ -661,7 +752,7 @@ func (c *CodeGuruProfiler) ListProfilingGroupsRequest(input *ListProfilingGroups
 
 // ListProfilingGroups API operation for Amazon CodeGuru Profiler.
 //
-// List profiling groups in the account.
+// Lists profiling groups.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -672,10 +763,10 @@ func (c *CodeGuruProfiler) ListProfilingGroupsRequest(input *ListProfilingGroups
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/ListProfilingGroups
 func (c *CodeGuruProfiler) ListProfilingGroups(input *ListProfilingGroupsInput) (*ListProfilingGroupsOutput, error) {
@@ -796,8 +887,6 @@ func (c *CodeGuruProfiler) PostAgentProfileRequest(input *PostAgentProfileInput)
 
 // PostAgentProfile API operation for Amazon CodeGuru Profiler.
 //
-// Submit profile collected by an agent belonging to a profiling group for aggregation.
-//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -807,16 +896,16 @@ func (c *CodeGuruProfiler) PostAgentProfileRequest(input *PostAgentProfileInput)
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/PostAgentProfile
 func (c *CodeGuruProfiler) PostAgentProfile(input *PostAgentProfileInput) (*PostAgentProfileOutput, error) {
@@ -835,6 +924,193 @@ func (c *CodeGuruProfiler) PostAgentProfile(input *PostAgentProfileInput) (*Post
 // for more information on using Contexts.
 func (c *CodeGuruProfiler) PostAgentProfileWithContext(ctx aws.Context, input *PostAgentProfileInput, opts ...request.Option) (*PostAgentProfileOutput, error) {
 	req, out := c.PostAgentProfileRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opPutPermission = "PutPermission"
+
+// PutPermissionRequest generates a "aws/request.Request" representing the
+// client's request for the PutPermission operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PutPermission for more information on using the PutPermission
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PutPermissionRequest method.
+//    req, resp := client.PutPermissionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/PutPermission
+func (c *CodeGuruProfiler) PutPermissionRequest(input *PutPermissionInput) (req *request.Request, output *PutPermissionOutput) {
+	op := &request.Operation{
+		Name:       opPutPermission,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/profilingGroups/{profilingGroupName}/policy/{actionGroup}",
+	}
+
+	if input == nil {
+		input = &PutPermissionInput{}
+	}
+
+	output = &PutPermissionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// PutPermission API operation for Amazon CodeGuru Profiler.
+//
+// Provides permission to the principals. This overwrites the existing permissions,
+// and is not additive.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Profiler's
+// API operation PutPermission for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ConflictException
+//   The requested operation would cause a conflict with the current state of
+//   a service resource associated with the request. Resolve the conflict before
+//   retrying this request.
+//
+//   * ValidationException
+//   The parameter is not valid.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/PutPermission
+func (c *CodeGuruProfiler) PutPermission(input *PutPermissionInput) (*PutPermissionOutput, error) {
+	req, out := c.PutPermissionRequest(input)
+	return out, req.Send()
+}
+
+// PutPermissionWithContext is the same as PutPermission with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PutPermission for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruProfiler) PutPermissionWithContext(ctx aws.Context, input *PutPermissionInput, opts ...request.Option) (*PutPermissionOutput, error) {
+	req, out := c.PutPermissionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opRemovePermission = "RemovePermission"
+
+// RemovePermissionRequest generates a "aws/request.Request" representing the
+// client's request for the RemovePermission operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See RemovePermission for more information on using the RemovePermission
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the RemovePermissionRequest method.
+//    req, resp := client.RemovePermissionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/RemovePermission
+func (c *CodeGuruProfiler) RemovePermissionRequest(input *RemovePermissionInput) (req *request.Request, output *RemovePermissionOutput) {
+	op := &request.Operation{
+		Name:       opRemovePermission,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/profilingGroups/{profilingGroupName}/policy/{actionGroup}",
+	}
+
+	if input == nil {
+		input = &RemovePermissionInput{}
+	}
+
+	output = &RemovePermissionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// RemovePermission API operation for Amazon CodeGuru Profiler.
+//
+// Removes statement for the provided action group from the policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Profiler's
+// API operation RemovePermission for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ConflictException
+//   The requested operation would cause a conflict with the current state of
+//   a service resource associated with the request. Resolve the conflict before
+//   retrying this request.
+//
+//   * ValidationException
+//   The parameter is not valid.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/RemovePermission
+func (c *CodeGuruProfiler) RemovePermission(input *RemovePermissionInput) (*RemovePermissionOutput, error) {
+	req, out := c.RemovePermissionRequest(input)
+	return out, req.Send()
+}
+
+// RemovePermissionWithContext is the same as RemovePermission with the addition of
+// the ability to pass a context and additional request options.
+//
+// See RemovePermission for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruProfiler) RemovePermissionWithContext(ctx aws.Context, input *RemovePermissionInput, opts ...request.Option) (*RemovePermissionOutput, error) {
+	req, out := c.RemovePermissionRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -884,7 +1160,7 @@ func (c *CodeGuruProfiler) UpdateProfilingGroupRequest(input *UpdateProfilingGro
 
 // UpdateProfilingGroup API operation for Amazon CodeGuru Profiler.
 //
-// Update a profiling group.
+// Updates a profiling group.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -895,19 +1171,21 @@ func (c *CodeGuruProfiler) UpdateProfilingGroupRequest(input *UpdateProfilingGro
 //
 // Returned Error Types:
 //   * InternalServerException
-//   Unexpected error during processing of request.
+//   The server encountered an internal error and is unable to complete the request.
 //
 //   * ConflictException
-//   Request can can cause an inconsistent state for the resource.
+//   The requested operation would cause a conflict with the current state of
+//   a service resource associated with the request. Resolve the conflict before
+//   retrying this request.
 //
 //   * ValidationException
-//   The input fails to satisfy the constraints of the API.
+//   The parameter is not valid.
 //
 //   * ThrottlingException
-//   Request was denied due to request throttling.
+//   The request was denied due to request throttling.
 //
 //   * ResourceNotFoundException
-//   Request references a resource which does not exist.
+//   The resource specified in the request does not exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/codeguruprofiler-2019-07-18/UpdateProfilingGroup
 func (c *CodeGuruProfiler) UpdateProfilingGroup(input *UpdateProfilingGroupInput) (*UpdateProfilingGroupOutput, error) {
@@ -931,18 +1209,12 @@ func (c *CodeGuruProfiler) UpdateProfilingGroupWithContext(ctx aws.Context, inpu
 	return out, req.Send()
 }
 
-// The configuration for the agent to use.
 type AgentConfiguration struct {
 	_ struct{} `type:"structure"`
 
-	// Specifies the period to follow the configuration (to profile or not) and
-	// call back to get a new configuration.
-	//
 	// PeriodInSeconds is a required field
 	PeriodInSeconds *int64 `locationName:"periodInSeconds" type:"integer" required:"true"`
 
-	// Specifies if the profiling should be enabled by the agent.
-	//
 	// ShouldProfile is a required field
 	ShouldProfile *bool `locationName:"shouldProfile" type:"boolean" required:"true"`
 }
@@ -969,14 +1241,9 @@ func (s *AgentConfiguration) SetShouldProfile(v bool) *AgentConfiguration {
 	return s
 }
 
-// Configuration to orchestrate agents to create and report agent profiles of
-// the profiling group. Agents are orchestrated if they follow the agent orchestration
-// protocol.
 type AgentOrchestrationConfig struct {
 	_ struct{} `type:"structure"`
 
-	// If the agents should be enabled to create and report profiles.
-	//
 	// ProfilingEnabled is a required field
 	ProfilingEnabled *bool `locationName:"profilingEnabled" type:"boolean" required:"true"`
 }
@@ -1010,14 +1277,14 @@ func (s *AgentOrchestrationConfig) SetProfilingEnabled(v bool) *AgentOrchestrati
 	return s
 }
 
-// The time range of an aggregated profile.
+// Information about the time range of the latest available aggregated profile.
 type AggregatedProfileTime struct {
 	_ struct{} `type:"structure"`
 
-	// The aggregation period of the aggregated profile.
+	// The time period.
 	Period *string `locationName:"period" type:"string" enum:"AggregationPeriod"`
 
-	// The start time of the aggregated profile.
+	// The start time.
 	Start *time.Time `locationName:"start" type:"timestamp" timestampFormat:"iso8601"`
 }
 
@@ -1043,16 +1310,12 @@ func (s *AggregatedProfileTime) SetStart(v time.Time) *AggregatedProfileTime {
 	return s
 }
 
-// Request for ConfigureAgent operation.
+// The structure representing the configureAgentRequest.
 type ConfigureAgentInput struct {
 	_ struct{} `type:"structure"`
 
-	// Identifier of the instance of compute fleet being profiled by the agent.
-	// For instance, host name in EC2, task id for ECS, function name for AWS Lambda
 	FleetInstanceId *string `locationName:"fleetInstanceId" min:"1" type:"string"`
 
-	// The name of the profiling group.
-	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
 }
@@ -1098,12 +1361,10 @@ func (s *ConfigureAgentInput) SetProfilingGroupName(v string) *ConfigureAgentInp
 	return s
 }
 
-// Response for ConfigureAgent operation.
+// The structure representing the configureAgentResponse.
 type ConfigureAgentOutput struct {
 	_ struct{} `type:"structure" payload:"Configuration"`
 
-	// The configuration for the agent to use.
-	//
 	// Configuration is a required field
 	Configuration *AgentConfiguration `locationName:"configuration" type:"structure" required:"true"`
 }
@@ -1124,10 +1385,12 @@ func (s *ConfigureAgentOutput) SetConfiguration(v *AgentConfiguration) *Configur
 	return s
 }
 
-// Request can can cause an inconsistent state for the resource.
+// The requested operation would cause a conflict with the current state of
+// a service resource associated with the request. Resolve the conflict before
+// retrying this request.
 type ConflictException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -1144,17 +1407,17 @@ func (s ConflictException) GoString() string {
 
 func newErrorConflictException(v protocol.ResponseMetadata) error {
 	return &ConflictException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ConflictException) Code() string {
+func (s *ConflictException) Code() string {
 	return "ConflictException"
 }
 
 // Message returns the exception's message.
-func (s ConflictException) Message() string {
+func (s *ConflictException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -1162,34 +1425,36 @@ func (s ConflictException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ConflictException) OrigErr() error {
+func (s *ConflictException) OrigErr() error {
 	return nil
 }
 
-func (s ConflictException) Error() string {
+func (s *ConflictException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ConflictException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ConflictException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ConflictException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ConflictException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Request for CreateProfilingGroup operation.
+// The structure representing the createProfiliingGroupRequest.
 type CreateProfilingGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// Configuration to orchestrate agents to create and report agent profiles of
-	// the profiling group. Agents are orchestrated if they follow the agent orchestration
-	// protocol.
+	// The agent orchestration configuration.
 	AgentOrchestrationConfig *AgentOrchestrationConfig `locationName:"agentOrchestrationConfig" type:"structure"`
 
-	// Client token for the request.
+	// Unique, case-sensitive identifier that you provide to ensure the idempotency
+	// of the request.
+	//
+	// This parameter specifies a unique identifier for the new profiling group
+	// that helps ensure idempotency.
 	ClientToken *string `location:"querystring" locationName:"clientToken" min:"1" type:"string" idempotencyToken:"true"`
 
 	// The name of the profiling group.
@@ -1250,11 +1515,11 @@ func (s *CreateProfilingGroupInput) SetProfilingGroupName(v string) *CreateProfi
 	return s
 }
 
-// Response for CreateProfilingGroup operation.
+// The structure representing the createProfilingGroupResponse.
 type CreateProfilingGroupOutput struct {
 	_ struct{} `type:"structure" payload:"ProfilingGroup"`
 
-	// The description of a profiling group.
+	// Information about the new profiling group
 	//
 	// ProfilingGroup is a required field
 	ProfilingGroup *ProfilingGroupDescription `locationName:"profilingGroup" type:"structure" required:"true"`
@@ -1276,11 +1541,11 @@ func (s *CreateProfilingGroupOutput) SetProfilingGroup(v *ProfilingGroupDescript
 	return s
 }
 
-// Request for DeleteProfilingGroup operation.
+// The structure representing the deleteProfilingGroupRequest.
 type DeleteProfilingGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the profiling group.
+	// The profiling group name to delete.
 	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
@@ -1318,7 +1583,7 @@ func (s *DeleteProfilingGroupInput) SetProfilingGroupName(v string) *DeleteProfi
 	return s
 }
 
-// Response for DeleteProfilingGroup operation.
+// The structure representing the deleteProfilingGroupResponse.
 type DeleteProfilingGroupOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1333,11 +1598,11 @@ func (s DeleteProfilingGroupOutput) GoString() string {
 	return s.String()
 }
 
-// Request for DescribeProfilingGroup operation.
+// The structure representing the describeProfilingGroupRequest.
 type DescribeProfilingGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the profiling group.
+	// The profiling group name.
 	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
@@ -1375,11 +1640,11 @@ func (s *DescribeProfilingGroupInput) SetProfilingGroupName(v string) *DescribeP
 	return s
 }
 
-// Response for DescribeProfilingGroup operation.
+// The structure representing the describeProfilingGroupResponse.
 type DescribeProfilingGroupOutput struct {
 	_ struct{} `type:"structure" payload:"ProfilingGroup"`
 
-	// The description of a profiling group.
+	// Information about a profiling group.
 	//
 	// ProfilingGroup is a required field
 	ProfilingGroup *ProfilingGroupDescription `locationName:"profilingGroup" type:"structure" required:"true"`
@@ -1401,33 +1666,116 @@ func (s *DescribeProfilingGroupOutput) SetProfilingGroup(v *ProfilingGroupDescri
 	return s
 }
 
-// Request for GetProfile operation.
-type GetProfileInput struct {
+// The structure representing the getPolicyRequest.
+type GetPolicyInput struct {
 	_ struct{} `type:"structure"`
-
-	// The format of the profile to return. Supports application/json or application/x-amzn-ion.
-	// Defaults to application/x-amzn-ion.
-	Accept *string `location:"header" locationName:"Accept" type:"string"`
-
-	// The end time of the profile to get. Either period or endTime must be specified.
-	// Must be greater than start and the overall time range to be in the past and
-	// not larger than a week.
-	EndTime *time.Time `location:"querystring" locationName:"endTime" type:"timestamp" timestampFormat:"iso8601"`
-
-	// Limit the max depth of the profile.
-	MaxDepth *int64 `location:"querystring" locationName:"maxDepth" min:"1" type:"integer"`
-
-	// The period of the profile to get. Exactly two of startTime, period and endTime
-	// must be specified. Must be positive and the overall time range to be in the
-	// past and not larger than a week.
-	Period *string `location:"querystring" locationName:"period" min:"1" type:"string"`
 
 	// The name of the profiling group.
 	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s GetPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s GetPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetPolicyInput"}
+	if s.ProfilingGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ProfilingGroupName"))
+	}
+	if s.ProfilingGroupName != nil && len(*s.ProfilingGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ProfilingGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetProfilingGroupName sets the ProfilingGroupName field's value.
+func (s *GetPolicyInput) SetProfilingGroupName(v string) *GetPolicyInput {
+	s.ProfilingGroupName = &v
+	return s
+}
+
+// The structure representing the getPolicyResponse.
+type GetPolicyOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The resource-based policy attached to the ProfilingGroup.
+	//
+	// Policy is a required field
+	Policy *string `locationName:"policy" type:"string" required:"true"`
+
+	// A unique identifier for the current revision of the policy.
+	//
+	// RevisionId is a required field
+	RevisionId *string `locationName:"revisionId" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s GetPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s GetPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetPolicy sets the Policy field's value.
+func (s *GetPolicyOutput) SetPolicy(v string) *GetPolicyOutput {
+	s.Policy = &v
+	return s
+}
+
+// SetRevisionId sets the RevisionId field's value.
+func (s *GetPolicyOutput) SetRevisionId(v string) *GetPolicyOutput {
+	s.RevisionId = &v
+	return s
+}
+
+// The structure representing the getProfileRequest.
+type GetProfileInput struct {
+	_ struct{} `type:"structure"`
+
+	// The format of the profile to return. You can choose application/json or the
+	// default application/x-amzn-ion.
+	Accept *string `location:"header" locationName:"Accept" type:"string"`
+
+	// You must specify exactly two of the following parameters: startTime, period,
+	// and endTime.
+	EndTime *time.Time `location:"querystring" locationName:"endTime" type:"timestamp" timestampFormat:"iso8601"`
+
+	// The maximum depth of the graph.
+	MaxDepth *int64 `location:"querystring" locationName:"maxDepth" min:"1" type:"integer"`
+
+	// The period of the profile to get. The time range must be in the past and
+	// not longer than one week.
+	//
+	// You must specify exactly two of the following parameters: startTime, period,
+	// and endTime.
+	Period *string `location:"querystring" locationName:"period" min:"1" type:"string"`
+
+	// The name of the profiling group to get.
+	//
+	// ProfilingGroupName is a required field
+	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
 
 	// The start time of the profile to get.
+	//
+	// You must specify exactly two of the following parameters: startTime, period,
+	// and endTime.
 	StartTime *time.Time `location:"querystring" locationName:"startTime" type:"timestamp" timestampFormat:"iso8601"`
 }
 
@@ -1499,21 +1847,20 @@ func (s *GetProfileInput) SetStartTime(v time.Time) *GetProfileInput {
 	return s
 }
 
-// Response for GetProfile operation.
+// The structure representing the getProfileResponse.
 type GetProfileOutput struct {
 	_ struct{} `type:"structure" payload:"Profile"`
 
-	// The content encoding of the profile in the payload.
+	// The content encoding of the profile.
 	ContentEncoding *string `location:"header" locationName:"Content-Encoding" type:"string"`
 
-	// The content type of the profile in the payload. Will be application/json
-	// or application/x-amzn-ion based on Accept header in the request.
+	// The content type of the profile in the payload. It is either application/json
+	// or the default application/x-amzn-ion.
 	//
 	// ContentType is a required field
 	ContentType *string `location:"header" locationName:"Content-Type" type:"string" required:"true"`
 
-	// The profile representing the aggregation of agent profiles of the profiling
-	// group for a time range.
+	// Information about the profile.
 	//
 	// Profile is a required field
 	Profile []byte `locationName:"profile" type:"blob" required:"true"`
@@ -1547,10 +1894,10 @@ func (s *GetProfileOutput) SetProfile(v []byte) *GetProfileOutput {
 	return s
 }
 
-// Unexpected error during processing of request.
+// The server encountered an internal error and is unable to complete the request.
 type InternalServerException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -1567,17 +1914,17 @@ func (s InternalServerException) GoString() string {
 
 func newErrorInternalServerException(v protocol.ResponseMetadata) error {
 	return &InternalServerException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s InternalServerException) Code() string {
+func (s *InternalServerException) Code() string {
 	return "InternalServerException"
 }
 
 // Message returns the exception's message.
-func (s InternalServerException) Message() string {
+func (s *InternalServerException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -1585,44 +1932,54 @@ func (s InternalServerException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s InternalServerException) OrigErr() error {
+func (s *InternalServerException) OrigErr() error {
 	return nil
 }
 
-func (s InternalServerException) Error() string {
+func (s *InternalServerException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s InternalServerException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *InternalServerException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s InternalServerException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *InternalServerException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Request for ListProfileTimes operation.
+// The structure representing the listProfileTimesRequest.
 type ListProfileTimesInput struct {
 	_ struct{} `type:"structure"`
 
-	// The end time of the time range to list profiles until.
+	// The end time of the time range from which to list the profiles.
 	//
 	// EndTime is a required field
 	EndTime *time.Time `location:"querystring" locationName:"endTime" type:"timestamp" timestampFormat:"iso8601" required:"true"`
 
-	// Upper bound on the number of results to list in a single call.
+	// The maximum number of profile time results returned by ListProfileTimes in
+	// paginated output. When this parameter is used, ListProfileTimes only returns
+	// maxResults results in a single page with a nextToken response element. The
+	// remaining results of the initial request can be seen by sending another ListProfileTimes
+	// request with the returned nextToken value.
 	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
 
-	// Token for paginating results.
+	// The nextToken value returned from a previous paginated ListProfileTimes request
+	// where maxResults was used and the results exceeded the value of that parameter.
+	// Pagination continues from the end of the previous results that returned the
+	// nextToken value.
+	//
+	// This token should be treated as an opaque identifier that is only used to
+	// retrieve the next items in a list and not for other programmatic purposes.
 	NextToken *string `location:"querystring" locationName:"nextToken" min:"1" type:"string"`
 
-	// The order (ascending or descending by start time of the profile) to list
-	// the profiles by. Defaults to TIMESTAMP_DESCENDING.
+	// The order (ascending or descending by start time of the profile) to use when
+	// listing profiles. Defaults to TIMESTAMP_DESCENDING.
 	OrderBy *string `location:"querystring" locationName:"orderBy" type:"string" enum:"OrderBy"`
 
-	// The aggregation period to list the profiles for.
+	// The aggregation period.
 	//
 	// Period is a required field
 	Period *string `location:"querystring" locationName:"period" type:"string" required:"true" enum:"AggregationPeriod"`
@@ -1632,7 +1989,7 @@ type ListProfileTimesInput struct {
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
 
-	// The start time of the time range to list the profiles from.
+	// The start time of the time range from which to list the profiles.
 	//
 	// StartTime is a required field
 	StartTime *time.Time `location:"querystring" locationName:"startTime" type:"timestamp" timestampFormat:"iso8601" required:"true"`
@@ -1721,14 +2078,17 @@ func (s *ListProfileTimesInput) SetStartTime(v time.Time) *ListProfileTimesInput
 	return s
 }
 
-// Response for ListProfileTimes operation.
+// The structure representing the listProfileTimesResponse.
 type ListProfileTimesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// Token for paginating results.
+	// The nextToken value to include in a future ListProfileTimes request. When
+	// the results of a ListProfileTimes request exceed maxResults, this value can
+	// be used to retrieve the next page of results. This value is null when there
+	// are no more results to return.
 	NextToken *string `locationName:"nextToken" min:"1" type:"string"`
 
-	// List of start times of the available profiles for the aggregation period
+	// The list of start times of the available profiles for the aggregation period
 	// in the specified time range.
 	//
 	// ProfileTimes is a required field
@@ -1757,18 +2117,27 @@ func (s *ListProfileTimesOutput) SetProfileTimes(v []*ProfileTime) *ListProfileT
 	return s
 }
 
-// Request for ListProfilingGroups operation.
+// The structure representing the listProfilingGroupsRequest.
 type ListProfilingGroupsInput struct {
 	_ struct{} `type:"structure"`
 
-	// If set to true, returns the full description of the profiling groups instead
-	// of the names. Defaults to false.
+	// A Boolean value indicating whether to include a description.
 	IncludeDescription *bool `location:"querystring" locationName:"includeDescription" type:"boolean"`
 
-	// Upper bound on the number of results to list in a single call.
+	// The maximum number of profiling groups results returned by ListProfilingGroups
+	// in paginated output. When this parameter is used, ListProfilingGroups only
+	// returns maxResults results in a single page along with a nextToken response
+	// element. The remaining results of the initial request can be seen by sending
+	// another ListProfilingGroups request with the returned nextToken value.
 	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
 
-	// Token for paginating results.
+	// The nextToken value returned from a previous paginated ListProfilingGroups
+	// request where maxResults was used and the results exceeded the value of that
+	// parameter. Pagination continues from the end of the previous results that
+	// returned the nextToken value.
+	//
+	// This token should be treated as an opaque identifier that is only used to
+	// retrieve the next items in a list and not for other programmatic purposes.
 	NextToken *string `location:"querystring" locationName:"nextToken" min:"1" type:"string"`
 }
 
@@ -1816,19 +2185,22 @@ func (s *ListProfilingGroupsInput) SetNextToken(v string) *ListProfilingGroupsIn
 	return s
 }
 
-// Response for ListProfilingGroups operation.
+// The structure representing the listProfilingGroupsResponse.
 type ListProfilingGroupsOutput struct {
 	_ struct{} `type:"structure"`
 
-	// Token for paginating results.
+	// The nextToken value to include in a future ListProfilingGroups request. When
+	// the results of a ListProfilingGroups request exceed maxResults, this value
+	// can be used to retrieve the next page of results. This value is null when
+	// there are no more results to return.
 	NextToken *string `locationName:"nextToken" min:"1" type:"string"`
 
-	// List of profiling group names.
+	// Information about profiling group names.
 	//
 	// ProfilingGroupNames is a required field
 	ProfilingGroupNames []*string `locationName:"profilingGroupNames" type:"list" required:"true"`
 
-	// List of profiling group descriptions.
+	// Information about profiling groups.
 	ProfilingGroups []*ProfilingGroupDescription `locationName:"profilingGroups" type:"list"`
 }
 
@@ -1860,28 +2232,18 @@ func (s *ListProfilingGroupsOutput) SetProfilingGroups(v []*ProfilingGroupDescri
 	return s
 }
 
-// Request for PostAgentProfile operation.
+// The structure representing the postAgentProfileRequest.
 type PostAgentProfileInput struct {
 	_ struct{} `type:"structure" payload:"AgentProfile"`
 
-	// The profile collected by an agent for a time range.
-	//
 	// AgentProfile is a required field
 	AgentProfile []byte `locationName:"agentProfile" type:"blob" required:"true"`
 
-	// The content type of the agent profile in the payload. Recommended to send
-	// the profile gzipped with content-type application/octet-stream. Other accepted
-	// values are application/x-amzn-ion and application/json for unzipped Ion and
-	// JSON respectively.
-	//
 	// ContentType is a required field
 	ContentType *string `location:"header" locationName:"Content-Type" type:"string" required:"true"`
 
-	// Client generated token to deduplicate the agent profile during aggregation.
 	ProfileToken *string `location:"querystring" locationName:"profileToken" min:"1" type:"string" idempotencyToken:"true"`
 
-	// The name of the profiling group.
-	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
 }
@@ -1945,7 +2307,7 @@ func (s *PostAgentProfileInput) SetProfilingGroupName(v string) *PostAgentProfil
 	return s
 }
 
-// Response for PostAgentProfile operation.
+// The structure representing the postAgentProfileResponse.
 type PostAgentProfileOutput struct {
 	_ struct{} `type:"structure"`
 }
@@ -1960,8 +2322,7 @@ func (s PostAgentProfileOutput) GoString() string {
 	return s.String()
 }
 
-// Periods of time used for aggregation of profiles, represented using ISO 8601
-// format.
+// Information about the profile time.
 type ProfileTime struct {
 	_ struct{} `type:"structure"`
 
@@ -1989,24 +2350,22 @@ func (s *ProfileTime) SetStart(v time.Time) *ProfileTime {
 type ProfilingGroupDescription struct {
 	_ struct{} `type:"structure"`
 
-	// Configuration to orchestrate agents to create and report agent profiles of
-	// the profiling group. Agents are orchestrated if they follow the agent orchestration
-	// protocol.
 	AgentOrchestrationConfig *AgentOrchestrationConfig `locationName:"agentOrchestrationConfig" type:"structure"`
 
-	// The ARN of the profiling group.
+	// The Amazon Resource Name (ARN) identifying the profiling group.
 	Arn *string `locationName:"arn" type:"string"`
 
-	// The timestamp of when the profiling group was created.
+	// The time, in milliseconds since the epoch, when the profiling group was created.
 	CreatedAt *time.Time `locationName:"createdAt" type:"timestamp" timestampFormat:"iso8601"`
 
 	// The name of the profiling group.
 	Name *string `locationName:"name" min:"1" type:"string"`
 
-	// The status of profiling of a profiling group.
+	// The status of the profiling group.
 	ProfilingStatus *ProfilingStatus `locationName:"profilingStatus" type:"structure"`
 
-	// The timestamp of when the profiling group was last updated.
+	// The time, in milliseconds since the epoch, when the profiling group was last
+	// updated.
 	UpdatedAt *time.Time `locationName:"updatedAt" type:"timestamp" timestampFormat:"iso8601"`
 }
 
@@ -2056,18 +2415,17 @@ func (s *ProfilingGroupDescription) SetUpdatedAt(v time.Time) *ProfilingGroupDes
 	return s
 }
 
-// The status of profiling of a profiling group.
+// Information about the profiling status.
 type ProfilingStatus struct {
 	_ struct{} `type:"structure"`
 
-	// Timestamp of when the last interaction of the agent with configureAgent API
-	// for orchestration.
+	// The time, in milliseconds since the epoch, when the latest agent was orchestrated.
 	LatestAgentOrchestratedAt *time.Time `locationName:"latestAgentOrchestratedAt" type:"timestamp" timestampFormat:"iso8601"`
 
-	// Timestamp of when the latest agent profile was successfully reported.
+	// The time, in milliseconds since the epoch, when the latest agent was reported..
 	LatestAgentProfileReportedAt *time.Time `locationName:"latestAgentProfileReportedAt" type:"timestamp" timestampFormat:"iso8601"`
 
-	// The time range of latest aggregated profile available.
+	// The latest aggregated profile
 	LatestAggregatedProfile *AggregatedProfileTime `locationName:"latestAggregatedProfile" type:"structure"`
 }
 
@@ -2099,10 +2457,247 @@ func (s *ProfilingStatus) SetLatestAggregatedProfile(v *AggregatedProfileTime) *
 	return s
 }
 
-// Request references a resource which does not exist.
+// The structure representing the putPermissionRequest.
+type PutPermissionInput struct {
+	_ struct{} `type:"structure"`
+
+	// The list of actions that the users and roles can perform on the profiling
+	// group.
+	//
+	// ActionGroup is a required field
+	ActionGroup *string `location:"uri" locationName:"actionGroup" type:"string" required:"true" enum:"ActionGroup"`
+
+	// The list of role and user ARNs or the accountId that needs access (wildcards
+	// are not allowed).
+	//
+	// Principals is a required field
+	Principals []*string `locationName:"principals" min:"1" type:"list" required:"true"`
+
+	// The name of the profiling group.
+	//
+	// ProfilingGroupName is a required field
+	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
+
+	// A unique identifier for the current revision of the policy. This is required,
+	// if a policy exists for the profiling group. This is not required when creating
+	// the policy for the first time.
+	RevisionId *string `locationName:"revisionId" type:"string"`
+}
+
+// String returns the string representation
+func (s PutPermissionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s PutPermissionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutPermissionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutPermissionInput"}
+	if s.ActionGroup == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActionGroup"))
+	}
+	if s.ActionGroup != nil && len(*s.ActionGroup) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ActionGroup", 1))
+	}
+	if s.Principals == nil {
+		invalidParams.Add(request.NewErrParamRequired("Principals"))
+	}
+	if s.Principals != nil && len(s.Principals) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Principals", 1))
+	}
+	if s.ProfilingGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ProfilingGroupName"))
+	}
+	if s.ProfilingGroupName != nil && len(*s.ProfilingGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ProfilingGroupName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetActionGroup sets the ActionGroup field's value.
+func (s *PutPermissionInput) SetActionGroup(v string) *PutPermissionInput {
+	s.ActionGroup = &v
+	return s
+}
+
+// SetPrincipals sets the Principals field's value.
+func (s *PutPermissionInput) SetPrincipals(v []*string) *PutPermissionInput {
+	s.Principals = v
+	return s
+}
+
+// SetProfilingGroupName sets the ProfilingGroupName field's value.
+func (s *PutPermissionInput) SetProfilingGroupName(v string) *PutPermissionInput {
+	s.ProfilingGroupName = &v
+	return s
+}
+
+// SetRevisionId sets the RevisionId field's value.
+func (s *PutPermissionInput) SetRevisionId(v string) *PutPermissionInput {
+	s.RevisionId = &v
+	return s
+}
+
+// The structure representing the putPermissionResponse.
+type PutPermissionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The resource-based policy.
+	//
+	// Policy is a required field
+	Policy *string `locationName:"policy" type:"string" required:"true"`
+
+	// A unique identifier for the current revision of the policy.
+	//
+	// RevisionId is a required field
+	RevisionId *string `locationName:"revisionId" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s PutPermissionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s PutPermissionOutput) GoString() string {
+	return s.String()
+}
+
+// SetPolicy sets the Policy field's value.
+func (s *PutPermissionOutput) SetPolicy(v string) *PutPermissionOutput {
+	s.Policy = &v
+	return s
+}
+
+// SetRevisionId sets the RevisionId field's value.
+func (s *PutPermissionOutput) SetRevisionId(v string) *PutPermissionOutput {
+	s.RevisionId = &v
+	return s
+}
+
+// The structure representing the removePermissionRequest.
+type RemovePermissionInput struct {
+	_ struct{} `type:"structure"`
+
+	// The list of actions that the users and roles can perform on the profiling
+	// group.
+	//
+	// ActionGroup is a required field
+	ActionGroup *string `location:"uri" locationName:"actionGroup" type:"string" required:"true" enum:"ActionGroup"`
+
+	// The name of the profiling group.
+	//
+	// ProfilingGroupName is a required field
+	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
+
+	// A unique identifier for the current revision of the policy.
+	//
+	// RevisionId is a required field
+	RevisionId *string `location:"querystring" locationName:"revisionId" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s RemovePermissionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s RemovePermissionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemovePermissionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemovePermissionInput"}
+	if s.ActionGroup == nil {
+		invalidParams.Add(request.NewErrParamRequired("ActionGroup"))
+	}
+	if s.ActionGroup != nil && len(*s.ActionGroup) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ActionGroup", 1))
+	}
+	if s.ProfilingGroupName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ProfilingGroupName"))
+	}
+	if s.ProfilingGroupName != nil && len(*s.ProfilingGroupName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ProfilingGroupName", 1))
+	}
+	if s.RevisionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("RevisionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetActionGroup sets the ActionGroup field's value.
+func (s *RemovePermissionInput) SetActionGroup(v string) *RemovePermissionInput {
+	s.ActionGroup = &v
+	return s
+}
+
+// SetProfilingGroupName sets the ProfilingGroupName field's value.
+func (s *RemovePermissionInput) SetProfilingGroupName(v string) *RemovePermissionInput {
+	s.ProfilingGroupName = &v
+	return s
+}
+
+// SetRevisionId sets the RevisionId field's value.
+func (s *RemovePermissionInput) SetRevisionId(v string) *RemovePermissionInput {
+	s.RevisionId = &v
+	return s
+}
+
+// The structure representing the removePermissionResponse.
+type RemovePermissionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The resource-based policy.
+	//
+	// Policy is a required field
+	Policy *string `locationName:"policy" type:"string" required:"true"`
+
+	// A unique identifier for the current revision of the policy.
+	//
+	// RevisionId is a required field
+	RevisionId *string `locationName:"revisionId" type:"string" required:"true"`
+}
+
+// String returns the string representation
+func (s RemovePermissionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s RemovePermissionOutput) GoString() string {
+	return s.String()
+}
+
+// SetPolicy sets the Policy field's value.
+func (s *RemovePermissionOutput) SetPolicy(v string) *RemovePermissionOutput {
+	s.Policy = &v
+	return s
+}
+
+// SetRevisionId sets the RevisionId field's value.
+func (s *RemovePermissionOutput) SetRevisionId(v string) *RemovePermissionOutput {
+	s.RevisionId = &v
+	return s
+}
+
+// The resource specified in the request does not exist.
 type ResourceNotFoundException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -2119,17 +2714,17 @@ func (s ResourceNotFoundException) GoString() string {
 
 func newErrorResourceNotFoundException(v protocol.ResponseMetadata) error {
 	return &ResourceNotFoundException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ResourceNotFoundException) Code() string {
+func (s *ResourceNotFoundException) Code() string {
 	return "ResourceNotFoundException"
 }
 
 // Message returns the exception's message.
-func (s ResourceNotFoundException) Message() string {
+func (s *ResourceNotFoundException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -2137,28 +2732,30 @@ func (s ResourceNotFoundException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ResourceNotFoundException) OrigErr() error {
+func (s *ResourceNotFoundException) OrigErr() error {
 	return nil
 }
 
-func (s ResourceNotFoundException) Error() string {
+func (s *ResourceNotFoundException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ResourceNotFoundException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ResourceNotFoundException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ResourceNotFoundException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ResourceNotFoundException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Request would cause a service quota to be exceeded.
+// You have exceeded your service quota. To perform the requested action, remove
+// some of the relevant resources, or use Service Quotas (https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html)
+// to request a service quota increase.
 type ServiceQuotaExceededException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -2175,17 +2772,17 @@ func (s ServiceQuotaExceededException) GoString() string {
 
 func newErrorServiceQuotaExceededException(v protocol.ResponseMetadata) error {
 	return &ServiceQuotaExceededException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ServiceQuotaExceededException) Code() string {
+func (s *ServiceQuotaExceededException) Code() string {
 	return "ServiceQuotaExceededException"
 }
 
 // Message returns the exception's message.
-func (s ServiceQuotaExceededException) Message() string {
+func (s *ServiceQuotaExceededException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -2193,28 +2790,28 @@ func (s ServiceQuotaExceededException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ServiceQuotaExceededException) OrigErr() error {
+func (s *ServiceQuotaExceededException) OrigErr() error {
 	return nil
 }
 
-func (s ServiceQuotaExceededException) Error() string {
+func (s *ServiceQuotaExceededException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ServiceQuotaExceededException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ServiceQuotaExceededException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ServiceQuotaExceededException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ServiceQuotaExceededException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Request was denied due to request throttling.
+// The request was denied due to request throttling.
 type ThrottlingException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -2231,17 +2828,17 @@ func (s ThrottlingException) GoString() string {
 
 func newErrorThrottlingException(v protocol.ResponseMetadata) error {
 	return &ThrottlingException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ThrottlingException) Code() string {
+func (s *ThrottlingException) Code() string {
 	return "ThrottlingException"
 }
 
 // Message returns the exception's message.
-func (s ThrottlingException) Message() string {
+func (s *ThrottlingException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -2249,34 +2846,32 @@ func (s ThrottlingException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ThrottlingException) OrigErr() error {
+func (s *ThrottlingException) OrigErr() error {
 	return nil
 }
 
-func (s ThrottlingException) Error() string {
+func (s *ThrottlingException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ThrottlingException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ThrottlingException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ThrottlingException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ThrottlingException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Request for UpdateProfilingGroup operation.
+// The structure representing the updateProfilingGroupRequest.
 type UpdateProfilingGroupInput struct {
 	_ struct{} `type:"structure"`
 
-	// Remote configuration to configure the agents of the profiling group.
-	//
 	// AgentOrchestrationConfig is a required field
 	AgentOrchestrationConfig *AgentOrchestrationConfig `locationName:"agentOrchestrationConfig" type:"structure" required:"true"`
 
-	// The name of the profiling group.
+	// The name of the profiling group to update.
 	//
 	// ProfilingGroupName is a required field
 	ProfilingGroupName *string `location:"uri" locationName:"profilingGroupName" min:"1" type:"string" required:"true"`
@@ -2328,11 +2923,11 @@ func (s *UpdateProfilingGroupInput) SetProfilingGroupName(v string) *UpdateProfi
 	return s
 }
 
-// Response for UpdateProfilingGroup operation.
+// The structure representing the updateProfilingGroupResponse.
 type UpdateProfilingGroupOutput struct {
 	_ struct{} `type:"structure" payload:"ProfilingGroup"`
 
-	// The description of a profiling group.
+	// Updated information about the profiling group.
 	//
 	// ProfilingGroup is a required field
 	ProfilingGroup *ProfilingGroupDescription `locationName:"profilingGroup" type:"structure" required:"true"`
@@ -2354,10 +2949,10 @@ func (s *UpdateProfilingGroupOutput) SetProfilingGroup(v *ProfilingGroupDescript
 	return s
 }
 
-// The input fails to satisfy the constraints of the API.
+// The parameter is not valid.
 type ValidationException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"message" type:"string"`
 }
@@ -2374,17 +2969,17 @@ func (s ValidationException) GoString() string {
 
 func newErrorValidationException(v protocol.ResponseMetadata) error {
 	return &ValidationException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ValidationException) Code() string {
+func (s *ValidationException) Code() string {
 	return "ValidationException"
 }
 
 // Message returns the exception's message.
-func (s ValidationException) Message() string {
+func (s *ValidationException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -2392,26 +2987,29 @@ func (s ValidationException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ValidationException) OrigErr() error {
+func (s *ValidationException) OrigErr() error {
 	return nil
 }
 
-func (s ValidationException) Error() string {
+func (s *ValidationException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ValidationException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ValidationException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ValidationException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ValidationException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
-// Periods of time used for aggregation of profiles, represented using ISO 8601
-// format.
+const (
+	// ActionGroupAgentPermissions is a ActionGroup enum value
+	ActionGroupAgentPermissions = "agentPermissions"
+)
+
 const (
 	// AggregationPeriodP1d is a AggregationPeriod enum value
 	AggregationPeriodP1d = "P1D"

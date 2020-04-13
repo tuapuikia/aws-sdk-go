@@ -1,3 +1,438 @@
+Release v1.30.7 (2020-04-08)
+===
+
+### Service Client Updates
+* `service/chime`: Updates service API and documentation
+  * feature: Chime: This release introduces the ability to tag Amazon Chime SDK meeting resources.  You can use tags to organize and identify your resources for cost allocation.
+* `service/cloudformation`: Updates service documentation
+  * The OrganizationalUnitIds parameter on StackSet and the OrganizationalUnitId parameter on StackInstance, StackInstanceSummary, and StackSetOperationResultSummary are now reserved for internal use. No data is returned for this parameter.
+* `service/codeguruprofiler`: Updates service API, documentation, and paginators
+* `service/ec2`: Updates service API and documentation
+  * This release provides the ability to include tags in EC2 event notifications.
+* `service/ecs`: Updates service API and documentation
+  * This release provides native support for specifying Amazon EFS file systems as volumes in your Amazon ECS task definitions.
+* `service/mediaconvert`: Updates service API and documentation
+  * AWS Elemental MediaConvert SDK adds support for queue hopping. Jobs can now hop from their original queue to a specified alternate queue, based on the maximum wait time that you specify in the job settings.
+* `service/migrationhub-config`: Updates service API and documentation
+
+### SDK Enhancements
+* `example/service/ecr`: Add create and delete repository examples ([#3221](https://github.com/aws/aws-sdk-go/pull/3221))
+  * Adds examples demonstrating how you can create and delete repositories with the SDK.
+
+Release v1.30.6 (2020-04-07)
+===
+
+### Service Client Updates
+* `service/apigateway`: Updates service documentation
+  * Documentation updates for Amazon API Gateway.
+* `service/codeguru-reviewer`: Updates service API
+* `service/mediaconnect`: Updates service API and documentation
+
+Release v1.30.5 (2020-04-06)
+===
+
+### Service Client Updates
+* `service/chime`: Updates service API, documentation, and paginators
+  * Amazon Chime proxy phone sessions let you provide two users with a shared phone number to communicate via voice or text for up to 12 hours without revealing personal phone numbers. When users call or message the provided phone number, they are connected to the other party and their private phone numbers are replaced with the shared number in Caller ID.
+* `service/elasticbeanstalk`: Updates service API, documentation, and paginators
+  * This release adds a new action, ListPlatformBranches, and updates two actions, ListPlatformVersions and DescribePlatformVersion, to support the concept of Elastic Beanstalk platform branches.
+* `service/iam`: Updates service documentation
+  * Documentation updates for AWS Identity and Access Management (IAM).
+* `service/transcribe`: Updates service API, documentation, and paginators
+
+Release v1.30.4 (2020-04-03)
+===
+
+### Service Client Updates
+* `service/personalize-runtime`: Updates service API and documentation
+* `service/robomaker`: Updates service API and documentation
+
+Release v1.30.3 (2020-04-02)
+===
+
+### Service Client Updates
+* `service/gamelift`: Updates service API and documentation
+  * Public preview of GameLift FleetIQ as a standalone feature. GameLift FleetIQ makes it possible to use low-cost Spot instances by limiting the chance of interruptions affecting game sessions. FleetIQ is a feature of the managed GameLift service, and can now be used with game hosting in EC2 Auto Scaling groups that you manage in your own account.
+* `service/medialive`: Updates service API, documentation, and waiters
+  * AWS Elemental MediaLive now supports Automatic Input Failover. This feature provides resiliency upstream of the channel, before ingest starts.
+* `service/monitoring`: Updates service API and documentation
+  * Amazon CloudWatch Contributor Insights adds support for tags and tagging on resource creation.
+* `service/rds`: Updates service documentation
+  * Documentation updates for RDS: creating read replicas is now supported for SQL Server DB instances
+* `service/redshift`: Updates service documentation
+  * Documentation updates for redshift
+
+### SDK Enhancements
+* `aws/credentials`: `ProviderWithContext` optional interface has been added to support passing contexts on credential retrieval ([#3223](https://github.com/aws/aws-sdk-go/pull/3223))
+  * Credential providers that implement the optional `ProviderWithContext` will have context passed to them
+  * `ec2rolecreds.EC2RoleProvider`, `endpointcreds.Provider`, `stscreds.AssumeRoleProvider`, `stscreds.WebIdentityRoleProvider` have been updated to support the `ProviderWithContext` interface
+  * Fixes [#3213](https://github.com/aws/aws-sdk-go/issues/3213)
+* `aws/ec2metadata`: Context aware operations have been added `EC2Metadata` client ([#3223](https://github.com/aws/aws-sdk-go/pull/3223))
+
+Release v1.30.2 (2020-04-01)
+===
+
+### Service Client Updates
+* `service/iot`: Updates service API and documentation
+  * This release introduces Dimensions for AWS IoT Device Defender. Dimensions can be used in Security Profiles to collect and monitor fine-grained metrics.
+* `service/mediaconnect`: Updates service API and documentation
+
+Release v1.30.1 (2020-03-31)
+===
+
+### Service Client Updates
+* `service/appconfig`: Updates service API and documentation
+* `service/detective`: Updates service documentation
+* `service/elastic-inference`: Updates service API
+* `service/fms`: Updates service API and documentation
+* `service/glue`: Updates service API and documentation
+  * Add two enums for MongoDB connection: Added "CONNECTION_URL" to "ConnectionPropertyKey" and added "MONGODB" to "ConnectionType"
+* `service/lambda`: Updates service API and documentation
+  * AWS Lambda now supports .NET Core 3.1
+* `service/mediastore`: Updates service API and documentation
+  * This release adds support for CloudWatch Metrics. You can now set a policy on your container to dictate which metrics MediaStore sends to CloudWatch.
+* `service/opsworkscm`: Updates service documentation
+  * Documentation updates for OpsWorks-CM CreateServer values.
+* `service/organizations`: Updates service documentation
+  * Documentation updates for AWS Organizations
+* `service/pinpoint`: Updates service API and documentation
+  * This release of the Amazon Pinpoint API introduces MMS support for SMS messages.
+* `service/rekognition`: Updates service API and documentation
+  * This release adds DeleteProject and DeleteProjectVersion APIs to Amazon Rekognition Custom Labels.
+* `service/storagegateway`: Updates service API and documentation
+  * Adding audit logging support for SMB File Shares
+* `service/wafv2`: Updates service API and documentation
+
+Release v1.30.0 (2020-03-30)
+===
+
+### Service Client Updates
+* `service/accessanalyzer`: Updates service API and documentation
+
+### SDK Features
+* SDK generated errors are fixed to use pointer receivers preventing confusion, and potential impossible type assertions. The SDK will only return API generated API error types as pointers. This fix ensures Go's type system will catch invalid error type assertions.
+
+### SDK Enhancements
+* Update SDK's `go-jmespath` dependency to latest tagged version `0.3.0` ([#3205](https://github.com/aws/aws-sdk-go/pull/3205))
+
+### SDK Bugs
+* Fix generated SDK errors to use pointer receivers
+  * Fixes the generated SDK API errors to use pointer function receivers instead of value. This fixes potential confusion writing code and not casting to the correct type. The SDK will always return the API error as a pointer, not value.
+  * Code that did type assertions from the operation's returned error to the value type would never be satisfied. Leading to errors being missed. Changing the function receiver to a pointer prevents this error. Highlighting it in code bases.
+
+Release v1.29.34 (2020-03-27)
+===
+
+### Service Client Updates
+* `service/globalaccelerator`: Updates service API and documentation
+* `service/kendra`: Updates service API and documentation
+  * The Amazon Kendra Microsoft SharePoint data source now supports include and exclude regular expressions and change log features. Include and exclude regular expressions enable you to  provide a list of regular expressions to match the display URL of SharePoint documents to either include or exclude documents respectively. When you enable the changelog feature it enables Amazon Kendra to use the SharePoint change log to determine which documents to update in the index.
+* `service/servicecatalog`: Updates service documentation
+  * Added "LocalRoleName" as an acceptable Parameter for Launch type in CreateConstraint and UpdateConstraint APIs
+
+Release v1.29.33 (2020-03-26)
+===
+
+### Service Client Updates
+* `service/fsx`: Updates service API and documentation
+* `service/sagemaker`: Updates service API and documentation
+  * This release updates Amazon Augmented AI CreateFlowDefinition API and DescribeFlowDefinition response.
+* `service/securityhub`: Updates service API and documentation
+
+Release v1.29.32 (2020-03-25)
+===
+
+### Service Client Updates
+* `service/application-insights`: Updates service API and documentation
+* `service/ce`: Updates service API and documentation
+* `service/detective`: Updates service API and documentation
+* `service/es`: Updates service API, documentation, and paginators
+  * Adding support for customer packages (dictionary files) to Amazon Elasticsearch Service
+* `service/managedblockchain`: Updates service API and documentation
+* `service/xray`: Updates service API and documentation
+  * GetTraceSummaries - Now provides additional root cause attribute ClientImpacting which indicates whether root cause impacted trace client.
+
+Release v1.29.31 (2020-03-24)
+===
+
+### Service Client Updates
+* `service/athena`: Updates service documentation
+  * Documentation updates for Athena, including QueryExecutionStatus QUEUED and RUNNING states. QUEUED now indicates that the query has been submitted to the service. RUNNING indicates that the query is in execution phase.
+* `service/eks`: Updates service API and documentation
+* `service/organizations`: Updates service API, documentation, and paginators
+  * Introduces actions for giving a member account administrative Organizations permissions for an AWS service. You can run this action only for AWS services that support this feature.
+* `service/rds-data`: Updates service documentation
+
+Release v1.29.30 (2020-03-23)
+===
+
+### Service Client Updates
+* `service/apigatewayv2`: Updates service API and documentation
+  * Documentation updates to reflect that the default timeout for integrations is now 30 seconds for HTTP APIs.
+* `service/eks`: Updates service API and documentation
+* `service/route53`: Updates service documentation
+  * Documentation updates for Route 53.
+
+Release v1.29.29 (2020-03-20)
+===
+
+### Service Client Updates
+* `service/servicecatalog`: Updates service API and documentation
+  * Added "productId" and "portfolioId" to responses from CreateConstraint, UpdateConstraint, ListConstraintsForPortfolio, and DescribeConstraint APIs
+
+Release v1.29.28 (2020-03-19)
+===
+
+### Service Client Updates
+* `service/acm`: Updates service API and documentation
+  * AWS Certificate Manager documentation updated on API calls ImportCertificate and ListCertificate. Specific updates included input constraints, private key size for import and next token size for list.
+* `service/outposts`: Updates service documentation
+
+Release v1.29.27 (2020-03-18)
+===
+
+### Service Client Updates
+* `service/mediaconnect`: Updates service API and documentation
+* `service/personalize`: Updates service API and documentation
+* `service/rds`: Updates service API and documentation
+  * Updated the MaxRecords type in DescribeExportTasks to Integer.
+
+Release v1.29.26 (2020-03-17)
+===
+
+### Service Client Updates
+* `service/mediaconvert`: Updates service API and documentation
+  * AWS Elemental MediaConvert SDK has added support for: AV1 encoding in File Group MP4, DASH and CMAF DASH outputs; PCM/WAV audio output in MPEG2-TS containers; and Opus audio in Webm inputs.
+
+Release v1.29.25 (2020-03-16)
+===
+
+### Service Client Updates
+* `service/cognito-idp`: Updates service API and documentation
+* `service/ecs`: Updates service API and documentation
+  * This release adds the ability to update the task placement strategy and constraints for Amazon ECS services.
+* `service/elasticache`: Updates service API, documentation, and paginators
+  * Amazon ElastiCache now supports Global Datastore for Redis. Global Datastore for Redis offers fully managed, fast, reliable and secure cross-region replication. Using Global Datastore for Redis, you can create cross-region read replica clusters for ElastiCache for Redis to enable low-latency reads and disaster recovery across regions. You can create, modify and describe a Global Datastore, as well as add or remove regions from your Global Datastore and promote a region as primary in Global Datastore.
+* `service/s3control`: Updates service API and documentation
+  * Amazon S3 now supports Batch Operations job tagging.
+* `service/ssm`: Updates service API and documentation
+  * Resource data sync for AWS Systems Manager Inventory now includes destination data sharing. This feature enables you to synchronize inventory data from multiple AWS accounts into a central Amazon S3 bucket. To use this feature, all AWS accounts must be listed in AWS Organizations.
+
+Release v1.29.24 (2020-03-13)
+===
+
+### Service Client Updates
+* `service/appconfig`: Updates service documentation
+
+Release v1.29.23 (2020-03-12)
+===
+
+### Service Client Updates
+* `service/apigatewayv2`: Updates service API and documentation
+  * Amazon API Gateway HTTP APIs is now generally available. HTTP APIs offer the core functionality of REST API at up to 71% lower price compared to REST API, 60% lower p99 latency, and is significantly easier to use. As part of general availability, we added new features to route requests to private backends such as private ALBs, NLBs, and IP/ports. We also brought over a set of features from REST API such as Stage Variables, and Stage/Route level throttling. Custom domain names can also now be used with both REST And HTTP APIs.
+* `service/ec2`: Updates service documentation
+  * Documentation updates for EC2
+* `service/iot`: Updates service API and documentation
+  * As part of this release, we are extending capability of AWS IoT Rules Engine to support IoT Cloudwatch log action. The IoT Cloudwatch log rule action lets you send messages from IoT sensors and applications to Cloudwatch logs for troubleshooting and debugging.
+* `service/lex-models`: Updates service API and documentation
+* `service/securityhub`: Updates service API and documentation
+
+Release v1.29.22 (2020-03-11)
+===
+
+### Service Client Updates
+* `service/elasticfilesystem`: Updates service documentation
+  * Documentation updates for elasticfilesystem
+* `service/redshift`: Updates service API and documentation
+  * Amazon Redshift now supports operations to pause and resume a cluster on demand or on a schedule.
+
+Release v1.29.21 (2020-03-10)
+===
+
+### Service Client Updates
+* `service/ec2`: Updates service API and documentation
+  * Documentation updates for EC2
+* `service/iotevents`: Updates service API and documentation
+* `service/marketplacecommerceanalytics`: Updates service documentation
+  * Change the disbursement data set to look past 31 days instead until the beginning of the month.
+* `service/serverlessrepo`: Updates service API and documentation
+
+### SDK Enhancements
+* `aws/credentials`: Clarify `token` usage in `NewStaticCredentials` documentation.
+  * Related to [#3162](https://github.com/aws/aws-sdk-go/issues/3162).
+* `service/s3/s3manager`: Improve memory allocation behavior by replacing sync.Pool with custom pool implementation ([#3183](https://github.com/aws/aws-sdk-go/pull/3183))
+  * Improves memory allocations that occur when the provided `io.Reader` to upload does not satisfy both the `io.ReaderAt` and `io.ReadSeeker` interfaces.
+  * Fixes [#3075](https://github.com/aws/aws-sdk-go/issues/3075)
+
+Release v1.29.20 (2020-03-09)
+===
+
+### Service Client Updates
+* `service/dms`: Updates service API and documentation
+  * Added new settings for Kinesis target to include detailed transaction info; to capture table DDL details; to use single-line unformatted json, which can be directly queried by AWS Athena if data is streamed into S3 through AWS Kinesis Firehose. Added CdcInsertsAndUpdates in S3 target settings to allow capture ongoing insertions and updates only.
+* `service/ec2`: Updates service API and documentation
+  * Amazon Virtual Private Cloud (VPC) NAT Gateway adds support for tagging on resource creation.
+* `service/medialive`: Updates service API and documentation
+  * AWS Elemental MediaLive now supports the ability to configure the Preferred Channel Pipeline for channels contributing to a Multiplex.
+
+Release v1.29.19 (2020-03-06)
+===
+
+### Service Client Updates
+* `service/appmesh`: Updates service API and documentation
+* `service/ec2`: Updates service API and documentation
+  * This release provides customers with a self-service option to enable Local Zones.
+* `service/guardduty`: Updates service API and documentation
+  * Amazon GuardDuty findings now include the OutpostArn if the finding is generated for an AWS Outposts EC2 host.
+* `service/robomaker`: Updates service API and documentation
+* `service/signer`: Updates service API and documentation
+  * This release enables signing image format override in PutSigningProfile requests, adding two more enum fields, JSONEmbedded and JSONDetached. This release also extends the length limit of SigningProfile name from 20 to 64.
+
+Release v1.29.18 (2020-03-05)
+===
+
+### Service Client Updates
+* `service/ec2`: Updates service API and documentation
+  * You can now create AWS Client VPN Endpoints with a specified VPC and Security Group. Additionally, you can modify these attributes when modifying the endpoint.
+* `service/eks`: Updates service API and documentation
+* `service/guardduty`: Updates service API and documentation
+  * Add a new finding field for EC2 findings indicating the instance's local IP address involved in the threat.
+* `service/opsworkscm`: Updates service API
+  * Updated the Tag regex pattern to align with AWS tagging APIs.
+
+Release v1.29.17 (2020-03-04)
+===
+
+### Service Client Updates
+* `service/pinpoint`: Updates service API and documentation
+  * This release of the Amazon Pinpoint API introduces support for integrating recommender models with email, push notification, and SMS message templates. You can now use these types of templates to connect to recommender models and add personalized recommendations to messages that you send from campaigns and journeys.
+
+### SDK Bugs
+* `service/s3/s3manager`: Fix resource leak on UploadPart failures ([#3144](https://github.com/aws/aws-sdk-go/pull/3144))
+
+Release v1.29.16 (2020-03-03)
+===
+
+### Service Client Updates
+* `service/ec2`: Updates service API, documentation, and paginators
+  * Amazon VPC Flow Logs adds support for tags and tagging on resource creation.
+
+Release v1.29.15 (2020-03-02)
+===
+
+### Service Client Updates
+* `service/comprehendmedical`: Updates service API and documentation
+* `service/monitoring`: Updates service API, documentation, waiters, and paginators
+  * Introducing Amazon CloudWatch Composite Alarms
+
+Release v1.29.14 (2020-02-29)
+===
+
+### Service Client Updates
+* `service/config`: Updates service API and documentation
+
+Release v1.29.13 (2020-02-28)
+===
+
+### Service Client Updates
+* `service/accessanalyzer`: Updates service paginators
+* `service/appmesh`: Updates service API and documentation
+* `service/codeguruprofiler`: Updates service documentation
+* `service/config`: Updates service API, documentation, and paginators
+* `service/elasticloadbalancingv2`: Updates service documentation
+* `service/glue`: Updates service API, documentation, and paginators
+  * AWS Glue adds resource tagging support for Machine Learning Transforms and adds a new API, ListMLTransforms to support tag filtering.  With this feature, customers can use tags in AWS Glue to organize and control access to Machine Learning Transforms.
+* `service/quicksight`: Updates service API, documentation, and paginators
+  * Added SearchDashboards API that allows listing of dashboards that a specific user has access to.
+* `service/sagemaker-a2i-runtime`: Updates service API and documentation
+* `service/workdocs`: Updates service documentation
+  * Documentation updates for workdocs
+
+Release v1.29.12 (2020-02-27)
+===
+
+### Service Client Updates
+* `service/globalaccelerator`: Updates service API and documentation
+* `service/lightsail`: Updates service API and documentation
+  * Adds support to create notification contacts in Amazon Lightsail, and to create instance, database, and load balancer metric alarms that notify you based on the value of a metric relative to a threshold that you specify.
+
+Release v1.29.11 (2020-02-26)
+===
+
+### Service Client Updates
+* `service/ec2`: Updates service API and documentation
+  * This release changes the RunInstances CLI and SDK's so that if you do not specify a client token, a randomly generated token is used for the request to ensure idempotency.
+* `service/sagemaker`: Updates service API and documentation
+  * SageMaker UpdateEndpoint API now supports retained variant properties, e.g., instance count, variant weight. SageMaker ListTrials API filter by TrialComponentName. Make ExperimentConfig name length limits consistent with CreateExperiment, CreateTrial, and CreateTrialComponent APIs.
+* `service/securityhub`: Updates service API and documentation
+* `service/transcribe`: Updates service API and documentation
+
+Release v1.29.10 (2020-02-25)
+===
+
+### Service Client Updates
+* `service/kafka`: Updates service API and documentation
+* `service/outposts`: Updates service API and documentation
+* `service/secretsmanager`: Updates service API and documentation
+  * This release increases the maximum allowed size of SecretString or SecretBinary from 10KB to 64KB in the CreateSecret, UpdateSecret, PutSecretValue and GetSecretValue APIs.
+* `service/states`: Updates service API and documentation
+  * This release adds support for CloudWatch Logs for Standard Workflows.
+
+Release v1.29.9 (2020-02-24)
+===
+
+### Service Client Updates
+* `service/docdb`: Updates service documentation
+  * Documentation updates for docdb
+* `service/eventbridge`: Updates service API and documentation
+* `service/events`: Updates service API and documentation
+  * This release allows you to create and manage tags for event buses.
+* `service/fsx`: Updates service API and documentation
+  * Announcing persistent file systems for Amazon FSx for Lustre that are ideal for longer-term storage and workloads, and a new generation of scratch file systems that offer higher burst throughput for spiky workloads.
+* `service/iotevents`: Updates service documentation
+* `service/snowball`: Updates service API and documentation
+  * AWS Snowball adds a field for entering your GSTIN when creating AWS Snowball jobs in the Asia Pacific (Mumbai) region.
+
+Release v1.29.8 (2020-02-21)
+===
+
+### Service Client Updates
+* `service/imagebuilder`: Updates service API and documentation
+* `service/redshift`: Updates service API and documentation
+  * Extend elastic resize to support resizing clusters to different instance types.
+* `service/wafv2`: Updates service API and documentation
+
+Release v1.29.7 (2020-02-20)
+===
+
+### Service Client Updates
+* `service/appconfig`: Updates service API and documentation
+* `service/pinpoint`: Updates service API
+  * As of this release of the Amazon Pinpoint API, the Title property is optional for the CampaignEmailMessage object.
+* `service/savingsplans`: Updates service API
+
+Release v1.29.6 (2020-02-19)
+===
+
+### Service Client Updates
+* `service/autoscaling`: Updates service documentation
+  * Doc update for EC2 Auto Scaling: Add Enabled parameter for PutScalingPolicy
+* `service/lambda`: Updates service API, documentation, and examples
+  * AWS Lambda now supports Ruby 2.7
+* `service/servicecatalog`: Updates service API, documentation, and paginators
+  * "ListPortfolioAccess" API now has a new optional parameter "OrganizationParentId". When it is provided and if the portfolio with the "PortfolioId" given was shared with an organization or organizational unit with "OrganizationParentId", all accounts in the organization sub-tree under parent which inherit an organizational portfolio share will be listed, rather than all accounts with external shares. To accommodate long lists returned from the new option, the API now supports pagination.
+
+Release v1.29.5 (2020-02-18)
+===
+
+### Service Client Updates
+* `service/autoscaling`: Updates service API and documentation
+  * Amazon EC2 Auto Scaling now supports the ability to enable/disable target tracking, step scaling, and simple scaling policies.
+* `service/chime`: Updates service API and documentation
+  * Added AudioFallbackUrl to support Chime SDK client.
+* `service/rds`: Updates service API and documentation
+  * This release supports Microsoft Active Directory authentication for Amazon Aurora.
+
 Release v1.29.4 (2020-02-17)
 ===
 

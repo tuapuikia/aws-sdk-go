@@ -144,8 +144,9 @@ func (c *AppConfig) CreateConfigurationProfileRequest(input *CreateConfiguration
 // CreateConfigurationProfile API operation for Amazon AppConfig.
 //
 // Information that enables AppConfig to access the configuration source. Valid
-// configuration sources include Systems Manager (SSM) documents and SSM Parameter
-// Store parameters. A configuration profile includes the following information.
+// configuration sources include Systems Manager (SSM) documents, SSM Parameter
+// Store parameters, and Amazon S3 objects. A configuration profile includes
+// the following information.
 //
 //    * The Uri location of the configuration data.
 //
@@ -154,6 +155,10 @@ func (c *AppConfig) CreateConfigurationProfileRequest(input *CreateConfiguration
 //
 //    * A validator for the configuration data. Available validators include
 //    either a JSON Schema or an AWS Lambda function.
+//
+// For more information, see Create a Configuration and a Configuration Profile
+// (http://docs.aws.amazon.com/systems-manager/latest/userguide/appconfig-creating-configuration-and-profile.html)
+// in the AWS AppConfig User Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2859,8 +2864,8 @@ func (s *Application) SetName(v string) *Application {
 
 // The input fails to satisfy the constraints specified by an AWS service.
 type BadRequestException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"Message" type:"string"`
 }
@@ -2877,17 +2882,17 @@ func (s BadRequestException) GoString() string {
 
 func newErrorBadRequestException(v protocol.ResponseMetadata) error {
 	return &BadRequestException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s BadRequestException) Code() string {
+func (s *BadRequestException) Code() string {
 	return "BadRequestException"
 }
 
 // Message returns the exception's message.
-func (s BadRequestException) Message() string {
+func (s *BadRequestException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -2895,22 +2900,22 @@ func (s BadRequestException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s BadRequestException) OrigErr() error {
+func (s *BadRequestException) OrigErr() error {
 	return nil
 }
 
-func (s BadRequestException) Error() string {
+func (s *BadRequestException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s BadRequestException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *BadRequestException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s BadRequestException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *BadRequestException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 // A summary of a configuration profile.
@@ -2976,8 +2981,8 @@ func (s *ConfigurationProfileSummary) SetValidatorTypes(v []*string) *Configurat
 // The request could not be processed because of conflict in the current state
 // of the resource.
 type ConflictException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"Message" type:"string"`
 }
@@ -2994,17 +2999,17 @@ func (s ConflictException) GoString() string {
 
 func newErrorConflictException(v protocol.ResponseMetadata) error {
 	return &ConflictException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ConflictException) Code() string {
+func (s *ConflictException) Code() string {
 	return "ConflictException"
 }
 
 // Message returns the exception's message.
-func (s ConflictException) Message() string {
+func (s *ConflictException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -3012,22 +3017,22 @@ func (s ConflictException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ConflictException) OrigErr() error {
+func (s *ConflictException) OrigErr() error {
 	return nil
 }
 
-func (s ConflictException) Error() string {
+func (s *ConflictException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ConflictException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ConflictException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ConflictException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ConflictException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type CreateApplicationInput struct {
@@ -3143,11 +3148,13 @@ type CreateConfigurationProfileInput struct {
 	// A description of the configuration profile.
 	Description *string `type:"string"`
 
-	// A URI to locate the configuration. You can specify either a Systems Manager
-	// (SSM) document or an SSM Parameter Store parameter. For an SSM document,
-	// specify either the document name in the format ssm-document://<Document name>
+	// A URI to locate the configuration. You can specify a Systems Manager (SSM)
+	// document, an SSM Parameter Store parameter, or an Amazon S3 object. For an
+	// SSM document, specify either the document name in the format ssm-document://<Document_name>
 	// or the Amazon Resource Name (ARN). For a parameter, specify either the parameter
-	// name in the format ssm-parameter://<Parameter name> or the ARN.
+	// name in the format ssm-parameter://<Parameter_name> or the ARN. For an Amazon
+	// S3 object, specify the URI in the following format: s3://<bucket>/<objectKey>
+	// . Here is an example: s3://my-bucket/my-app/us-east-1/my-config.json
 	//
 	// LocationUri is a required field
 	LocationUri *string `min:"1" type:"string" required:"true"`
@@ -3367,7 +3374,31 @@ type CreateDeploymentStrategyInput struct {
 	// GrowthFactor is a required field
 	GrowthFactor *float64 `min:"1" type:"float" required:"true"`
 
-	// The algorithm used to define how percentage grows over time.
+	// The algorithm used to define how percentage grows over time. AWS AppConfig
+	// supports the following growth types:
+	//
+	// Linear: For this type, AppConfig processes the deployment by dividing the
+	// total number of targets by the value specified for Step percentage. For example,
+	// a linear deployment that uses a Step percentage of 10 deploys the configuration
+	// to 10 percent of the hosts. After those deployments are complete, the system
+	// deploys the configuration to the next 10 percent. This continues until 100%
+	// of the targets have successfully received the configuration.
+	//
+	// Exponential: For this type, AppConfig processes the deployment exponentially
+	// using the following formula: G*(2^N). In this formula, G is the growth factor
+	// specified by the user and N is the number of steps until the configuration
+	// is deployed to all targets. For example, if you specify a growth factor of
+	// 2, then the system rolls out the configuration as follows:
+	//
+	// 2*(2^0)
+	//
+	// 2*(2^1)
+	//
+	// 2*(2^2)
+	//
+	// Expressed numerically, the deployment rolls out as follows: 2% of the targets,
+	// 4% of the targets, 8% of the targets, and continues until the configuration
+	// has been deployed to all targets.
 	GrowthType *string `type:"string" enum:"GrowthType"`
 
 	// A name for the deployment strategy.
@@ -3980,6 +4011,63 @@ func (s DeleteEnvironmentOutput) GoString() string {
 	return s.String()
 }
 
+// An object that describes a deployment event.
+type DeploymentEvent struct {
+	_ struct{} `type:"structure"`
+
+	// A description of the deployment event. Descriptions include, but are not
+	// limited to, the user account or the CloudWatch alarm ARN that initiated a
+	// rollback, the percentage of hosts that received the deployment, or in the
+	// case of an internal error, a recommendation to attempt a new deployment.
+	Description *string `type:"string"`
+
+	// The type of deployment event. Deployment event types include the start, stop,
+	// or completion of a deployment; a percentage update; the start or stop of
+	// a bake period; the start or completion of a rollback.
+	EventType *string `type:"string" enum:"DeploymentEventType"`
+
+	// The date and time the event occurred.
+	OccurredAt *time.Time `type:"timestamp" timestampFormat:"iso8601"`
+
+	// The entity that triggered the deployment event. Events can be triggered by
+	// a user, AWS AppConfig, an Amazon CloudWatch alarm, or an internal error.
+	TriggeredBy *string `type:"string" enum:"TriggeredBy"`
+}
+
+// String returns the string representation
+func (s DeploymentEvent) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s DeploymentEvent) GoString() string {
+	return s.String()
+}
+
+// SetDescription sets the Description field's value.
+func (s *DeploymentEvent) SetDescription(v string) *DeploymentEvent {
+	s.Description = &v
+	return s
+}
+
+// SetEventType sets the EventType field's value.
+func (s *DeploymentEvent) SetEventType(v string) *DeploymentEvent {
+	s.EventType = &v
+	return s
+}
+
+// SetOccurredAt sets the OccurredAt field's value.
+func (s *DeploymentEvent) SetOccurredAt(v time.Time) *DeploymentEvent {
+	s.OccurredAt = &v
+	return s
+}
+
+// SetTriggeredBy sets the TriggeredBy field's value.
+func (s *DeploymentEvent) SetTriggeredBy(v string) *DeploymentEvent {
+	s.TriggeredBy = &v
+	return s
+}
+
 type DeploymentStrategy struct {
 	_ struct{} `type:"structure"`
 
@@ -4338,7 +4426,8 @@ func (s *GetApplicationOutput) SetName(v string) *GetApplicationOutput {
 type GetConfigurationInput struct {
 	_ struct{} `type:"structure"`
 
-	// The application to get.
+	// The application to get. Specify either the application name or the application
+	// ID.
 	//
 	// Application is a required field
 	Application *string `location:"uri" locationName:"Application" min:"1" type:"string" required:"true"`
@@ -4353,12 +4442,14 @@ type GetConfigurationInput struct {
 	// ClientId is a required field
 	ClientId *string `location:"querystring" locationName:"client_id" min:"1" type:"string" required:"true"`
 
-	// The configuration to get.
+	// The configuration to get. Specify either the configuration name or the configuration
+	// ID.
 	//
 	// Configuration is a required field
 	Configuration *string `location:"uri" locationName:"Configuration" min:"1" type:"string" required:"true"`
 
-	// The environment to get.
+	// The environment to get. Specify either the environment name or the environment
+	// ID.
 	//
 	// Environment is a required field
 	Environment *string `location:"uri" locationName:"Environment" min:"1" type:"string" required:"true"`
@@ -4728,6 +4819,10 @@ type GetDeploymentOutput struct {
 	// The ID of the environment that was deployed.
 	EnvironmentId *string `type:"string"`
 
+	// A list containing all events related to a deployment. The most recent events
+	// are displayed first.
+	EventLog []*DeploymentEvent `type:"list"`
+
 	// The amount of time AppConfig monitored for alarms before considering the
 	// deployment to be complete and no longer eligible for automatic roll back.
 	FinalBakeTimeInMinutes *int64 `type:"integer"`
@@ -4822,6 +4917,12 @@ func (s *GetDeploymentOutput) SetDescription(v string) *GetDeploymentOutput {
 // SetEnvironmentId sets the EnvironmentId field's value.
 func (s *GetDeploymentOutput) SetEnvironmentId(v string) *GetDeploymentOutput {
 	s.EnvironmentId = &v
+	return s
+}
+
+// SetEventLog sets the EventLog field's value.
+func (s *GetDeploymentOutput) SetEventLog(v []*DeploymentEvent) *GetDeploymentOutput {
+	s.EventLog = v
 	return s
 }
 
@@ -5119,8 +5220,8 @@ func (s *GetEnvironmentOutput) SetState(v string) *GetEnvironmentOutput {
 
 // There was an internal failure in the AppConfig service.
 type InternalServerException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"Message" type:"string"`
 }
@@ -5137,17 +5238,17 @@ func (s InternalServerException) GoString() string {
 
 func newErrorInternalServerException(v protocol.ResponseMetadata) error {
 	return &InternalServerException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s InternalServerException) Code() string {
+func (s *InternalServerException) Code() string {
 	return "InternalServerException"
 }
 
 // Message returns the exception's message.
-func (s InternalServerException) Message() string {
+func (s *InternalServerException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -5155,22 +5256,22 @@ func (s InternalServerException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s InternalServerException) OrigErr() error {
+func (s *InternalServerException) OrigErr() error {
 	return nil
 }
 
-func (s InternalServerException) Error() string {
+func (s *InternalServerException) Error() string {
 	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s InternalServerException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *InternalServerException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s InternalServerException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *InternalServerException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type ListApplicationsInput struct {
@@ -5773,8 +5874,8 @@ func (s *Monitor) SetAlarmRoleArn(v string) *Monitor {
 
 // The requested resource could not be found.
 type ResourceNotFoundException struct {
-	_            struct{} `type:"structure"`
-	respMetadata protocol.ResponseMetadata
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
 
 	Message_ *string `locationName:"Message" type:"string"`
 
@@ -5793,17 +5894,17 @@ func (s ResourceNotFoundException) GoString() string {
 
 func newErrorResourceNotFoundException(v protocol.ResponseMetadata) error {
 	return &ResourceNotFoundException{
-		respMetadata: v,
+		RespMetadata: v,
 	}
 }
 
 // Code returns the exception type name.
-func (s ResourceNotFoundException) Code() string {
+func (s *ResourceNotFoundException) Code() string {
 	return "ResourceNotFoundException"
 }
 
 // Message returns the exception's message.
-func (s ResourceNotFoundException) Message() string {
+func (s *ResourceNotFoundException) Message() string {
 	if s.Message_ != nil {
 		return *s.Message_
 	}
@@ -5811,22 +5912,22 @@ func (s ResourceNotFoundException) Message() string {
 }
 
 // OrigErr always returns nil, satisfies awserr.Error interface.
-func (s ResourceNotFoundException) OrigErr() error {
+func (s *ResourceNotFoundException) OrigErr() error {
 	return nil
 }
 
-func (s ResourceNotFoundException) Error() string {
+func (s *ResourceNotFoundException) Error() string {
 	return fmt.Sprintf("%s: %s\n%s", s.Code(), s.Message(), s.String())
 }
 
 // Status code returns the HTTP status code for the request's response error.
-func (s ResourceNotFoundException) StatusCode() int {
-	return s.respMetadata.StatusCode
+func (s *ResourceNotFoundException) StatusCode() int {
+	return s.RespMetadata.StatusCode
 }
 
 // RequestID returns the service's response RequestID for request.
-func (s ResourceNotFoundException) RequestID() string {
-	return s.respMetadata.RequestID
+func (s *ResourceNotFoundException) RequestID() string {
+	return s.RespMetadata.RequestID
 }
 
 type StartDeploymentInput struct {
@@ -5988,6 +6089,10 @@ type StartDeploymentOutput struct {
 	// The ID of the environment that was deployed.
 	EnvironmentId *string `type:"string"`
 
+	// A list containing all events related to a deployment. The most recent events
+	// are displayed first.
+	EventLog []*DeploymentEvent `type:"list"`
+
 	// The amount of time AppConfig monitored for alarms before considering the
 	// deployment to be complete and no longer eligible for automatic roll back.
 	FinalBakeTimeInMinutes *int64 `type:"integer"`
@@ -6082,6 +6187,12 @@ func (s *StartDeploymentOutput) SetDescription(v string) *StartDeploymentOutput 
 // SetEnvironmentId sets the EnvironmentId field's value.
 func (s *StartDeploymentOutput) SetEnvironmentId(v string) *StartDeploymentOutput {
 	s.EnvironmentId = &v
+	return s
+}
+
+// SetEventLog sets the EventLog field's value.
+func (s *StartDeploymentOutput) SetEventLog(v []*DeploymentEvent) *StartDeploymentOutput {
+	s.EventLog = v
 	return s
 }
 
@@ -6229,6 +6340,10 @@ type StopDeploymentOutput struct {
 	// The ID of the environment that was deployed.
 	EnvironmentId *string `type:"string"`
 
+	// A list containing all events related to a deployment. The most recent events
+	// are displayed first.
+	EventLog []*DeploymentEvent `type:"list"`
+
 	// The amount of time AppConfig monitored for alarms before considering the
 	// deployment to be complete and no longer eligible for automatic roll back.
 	FinalBakeTimeInMinutes *int64 `type:"integer"`
@@ -6323,6 +6438,12 @@ func (s *StopDeploymentOutput) SetDescription(v string) *StopDeploymentOutput {
 // SetEnvironmentId sets the EnvironmentId field's value.
 func (s *StopDeploymentOutput) SetEnvironmentId(v string) *StopDeploymentOutput {
 	s.EnvironmentId = &v
+	return s
+}
+
+// SetEventLog sets the EventLog field's value.
+func (s *StopDeploymentOutput) SetEventLog(v []*DeploymentEvent) *StopDeploymentOutput {
+	s.EventLog = v
 	return s
 }
 
@@ -6816,7 +6937,31 @@ type UpdateDeploymentStrategyInput struct {
 	// interval.
 	GrowthFactor *float64 `min:"1" type:"float"`
 
-	// The algorithm used to define how percentage grows over time.
+	// The algorithm used to define how percentage grows over time. AWS AppConfig
+	// supports the following growth types:
+	//
+	// Linear: For this type, AppConfig processes the deployment by increments of
+	// the growth factor evenly distributed over the deployment time. For example,
+	// a linear deployment that uses a growth factor of 20 initially makes the configuration
+	// available to 20 percent of the targets. After 1/5th of the deployment time
+	// has passed, the system updates the percentage to 40 percent. This continues
+	// until 100% of the targets are set to receive the deployed configuration.
+	//
+	// Exponential: For this type, AppConfig processes the deployment exponentially
+	// using the following formula: G*(2^N). In this formula, G is the growth factor
+	// specified by the user and N is the number of steps until the configuration
+	// is deployed to all targets. For example, if you specify a growth factor of
+	// 2, then the system rolls out the configuration as follows:
+	//
+	// 2*(2^0)
+	//
+	// 2*(2^1)
+	//
+	// 2*(2^2)
+	//
+	// Expressed numerically, the deployment rolls out as follows: 2% of the targets,
+	// 4% of the targets, 8% of the targets, and continues until the configuration
+	// has been deployed to all targets.
 	GrowthType *string `type:"string" enum:"GrowthType"`
 }
 
@@ -7237,7 +7382,8 @@ func (s ValidateConfigurationOutput) GoString() string {
 type Validator struct {
 	_ struct{} `type:"structure"`
 
-	// Either the JSON Schema content or an AWS Lambda function name.
+	// Either the JSON Schema content or the Amazon Resource Name (ARN) of an AWS
+	// Lambda function.
 	//
 	// Content is a required field
 	Content *string `type:"string" required:"true"`
@@ -7287,6 +7433,26 @@ func (s *Validator) SetType(v string) *Validator {
 }
 
 const (
+	// DeploymentEventTypePercentageUpdated is a DeploymentEventType enum value
+	DeploymentEventTypePercentageUpdated = "PERCENTAGE_UPDATED"
+
+	// DeploymentEventTypeRollbackStarted is a DeploymentEventType enum value
+	DeploymentEventTypeRollbackStarted = "ROLLBACK_STARTED"
+
+	// DeploymentEventTypeRollbackCompleted is a DeploymentEventType enum value
+	DeploymentEventTypeRollbackCompleted = "ROLLBACK_COMPLETED"
+
+	// DeploymentEventTypeBakeTimeStarted is a DeploymentEventType enum value
+	DeploymentEventTypeBakeTimeStarted = "BAKE_TIME_STARTED"
+
+	// DeploymentEventTypeDeploymentStarted is a DeploymentEventType enum value
+	DeploymentEventTypeDeploymentStarted = "DEPLOYMENT_STARTED"
+
+	// DeploymentEventTypeDeploymentCompleted is a DeploymentEventType enum value
+	DeploymentEventTypeDeploymentCompleted = "DEPLOYMENT_COMPLETED"
+)
+
+const (
 	// DeploymentStateBaking is a DeploymentState enum value
 	DeploymentStateBaking = "BAKING"
 
@@ -7323,6 +7489,9 @@ const (
 const (
 	// GrowthTypeLinear is a GrowthType enum value
 	GrowthTypeLinear = "LINEAR"
+
+	// GrowthTypeExponential is a GrowthType enum value
+	GrowthTypeExponential = "EXPONENTIAL"
 )
 
 const (
@@ -7331,6 +7500,20 @@ const (
 
 	// ReplicateToSsmDocument is a ReplicateTo enum value
 	ReplicateToSsmDocument = "SSM_DOCUMENT"
+)
+
+const (
+	// TriggeredByUser is a TriggeredBy enum value
+	TriggeredByUser = "USER"
+
+	// TriggeredByAppconfig is a TriggeredBy enum value
+	TriggeredByAppconfig = "APPCONFIG"
+
+	// TriggeredByCloudwatchAlarm is a TriggeredBy enum value
+	TriggeredByCloudwatchAlarm = "CLOUDWATCH_ALARM"
+
+	// TriggeredByInternalError is a TriggeredBy enum value
+	TriggeredByInternalError = "INTERNAL_ERROR"
 )
 
 const (
